@@ -1,6 +1,7 @@
+const apps = require('./apps');
 const axios = require("axios");
 
-const limit = 200
+const limit = 69
 
 const monthMap = {
   "Jan": 1,
@@ -32,13 +33,17 @@ function escapeString(s) {
 const main = async () => {
   const developers = [], publishers = [], categories = [], genres = [], articles = [], pictures = [], articleDev = [],
     articlePub = [], articleCat = [], articleGen = [], availableArticles = new Set();
-  let count = -1;
+  let count = 0;
 
   async function retrieveAndSaveDetails(appId) {
-    count++
-    let details;
+    if (count === limit) {
+      console.error("Limit reached");
+      return;
+    }
 
+    let details;
     try {
+      count++
       details = (await axios.get(`https://store.steampowered.com/api/appdetails?appids=${appId}`)).data[appId].data;
 
       if (!details) return;
@@ -47,24 +52,27 @@ const main = async () => {
       availableArticles.add(appId)
 
       const type = details.type?.toUpperCase() ?? "GAME";
-      const baseArticle = type === "DLC" ? details.fullgame.appid : "NULL";
+      if (type === "DEMO" || type === "MUSIC") return;
 
-      if (type === "DEMO") return;
-      if (type === "DLC" && !availableArticles.has(baseArticle)) {
-        console.error(`DLC ${appId} has no base game ${baseArticle}. FETCHING!`);
-        if (count + 1 !== limit) return;
-        await retrieveAndSaveDetails(baseArticle)
+      const baseArticle = type === "DLC" ? details.fullgame.appid : "NULL";
+      if (baseArticle !== "NULL" && !availableArticles.has(baseArticle)) {
+        console.error(`${count}/${limit}`, `Base article ${baseArticle} not available`);
+        return;
       }
 
+      let addedSet = new Set()
       if (details.developers) {
         for (let x of details.developers) {
           if (developers.includes(x)) continue;
           developers.push(x);
         }
         for (let x of details.developers) {
+          if (addedSet.has(x)) continue;
           articleDev.push([appId, developers.indexOf(x)]);
+          addedSet.add(x);
         }
       }
+      addedSet.clear()
 
       if (details.publishers) {
         for (let x of details.publishers) {
@@ -72,9 +80,12 @@ const main = async () => {
           publishers.push(x);
         }
         for (let x of details.publishers) {
+          if (addedSet.has(x)) continue;
           articlePub.push([appId, publishers.indexOf(x)]);
+          addedSet.add(x);
         }
       }
+      addedSet.clear()
 
       if (details.categories) {
         for (let x of details.categories) {
@@ -82,17 +93,23 @@ const main = async () => {
           categories.push(x.description);
         }
         for (let x of details.categories) {
+          if (addedSet.has(x.description)) continue;
           articleCat.push([appId, categories.indexOf(x.description)]);
+          addedSet.add(x.description);
         }
       }
+      addedSet.clear()
 
       if (details.genres) {
         for (let x of details.genres) {
           if (genres.includes(x.description)) continue;
           genres.push(x.description);
         }
+        let addedSet = new Set()
         for (let x of details.genres) {
+          if (addedSet.has(x.description)) continue;
           articleGen.push([appId, genres.indexOf(x.description)]);
+          addedSet.add(x.description);
         }
       }
 
@@ -103,21 +120,29 @@ const main = async () => {
           pictures.push({id: pictureId++, full: x.path_full, thumb: x.path_thumbnail, appid: appId});
         }
       }
+
+      if (details.dlc) {
+        let dlcCount = 0;
+        for (x of details.dlc) {
+          if (dlcCount === 4) {
+            console.error("DLC limit reached");
+            break;
+          }
+          console.error(`Fetching DLC ${x} for ${details.name}`);
+          await retrieveAndSaveDetails(x)
+          dlcCount++;
+        }
+      }
+      console.error(`${count}/${limit}`, `${appId} - ${details.name} ready to include! (${type})`);
     } catch (error) {
       console.error(error, appId)
     }
   }
 
   let pictureId = 1;
-
-  const apps = (await axios.get("http://api.steampowered.com/ISteamApps/GetAppList/v0002/?format=json")).data.applist.apps;
-
   for (let app of apps) {
     try {
-      if (Math.random() >= 0.4) continue;
-      if (!app.name || app.name.toLowerCase().includes("test") || app.name.toLowerCase().includes("demo")) continue;
-
-      await retrieveAndSaveDetails(app.appid)
+      await retrieveAndSaveDetails(app)
 
       if (count === limit) break;
     } catch (error) {
@@ -126,35 +151,39 @@ const main = async () => {
     }
   }
 
-  console.log("-- DEVELOPERS");
-  developers.forEach((name, i) => console.log(`INSERT INTO developer (id, name) VALUES (${i}, '${escapeString(name)}');`));
+  try {
+    console.log("-- DEVELOPERS");
+    developers.forEach((name, i) => console.log(`INSERT INTO developer (id, name) VALUES (${i}, '${escapeString(name)}');`));
 
-  console.log("\n-- PUBLISHERS");
-  publishers.forEach((name, i) => console.log(`INSERT INTO publisher (id, name) VALUES (${i}, '${escapeString(name)}');`));
+    console.log("\n-- PUBLISHERS");
+    publishers.forEach((name, i) => console.log(`INSERT INTO publisher (id, name) VALUES (${i}, '${escapeString(name)}');`));
 
-  console.log("\n-- CATEGORIES");
-  categories.forEach((name, i) => console.log(`INSERT INTO category (id, name) VALUES (${i}, '${escapeString(name)}');`));
+    console.log("\n-- CATEGORIES");
+    categories.forEach((name, i) => console.log(`INSERT INTO category (id, name) VALUES (${i}, '${escapeString(name)}');`));
 
-  console.log("\n-- GENRES");
-  genres.forEach((name, i) => console.log(`INSERT INTO genre (id, name) VALUES (${i}, '${escapeString(name)}');`));
+    console.log("\n-- GENRES");
+    genres.forEach((name, i) => console.log(`INSERT INTO genre (id, name) VALUES (${i}, '${escapeString(name)}');`));
 
-  console.log("\n-- ARTICLES")
-  articles.forEach(x => console.log(x));
+    console.log("\n-- ARTICLES")
+    articles.forEach(x => console.log(x));
 
-  console.log("\n-- ARTICLE DEVELOPERS")
-  articleDev.forEach(x => console.log(`INSERT INTO article_developer (id_article, id_developer) VALUES (${x[0]}, ${x[1]});`));
+    console.log("\n-- ARTICLE DEVELOPERS")
+    articleDev.forEach(x => console.log(`INSERT INTO article_developer (id_article, id_developer) VALUES (${x[0]}, ${x[1]});`));
 
-  console.log("\n-- ARTICLE PUBLISHERS")
-  articlePub.forEach(x => console.log(`INSERT INTO article_publisher (id_article, id_publisher) VALUES (${x[0]}, ${x[1]});`));
+    console.log("\n-- ARTICLE PUBLISHERS")
+    articlePub.forEach(x => console.log(`INSERT INTO article_publisher (id_article, id_publisher) VALUES (${x[0]}, ${x[1]});`));
 
-  console.log("\n-- ARTICLE CATEGORIES")
-  articleCat.forEach(x => console.log(`INSERT INTO article_category (id_article, id_category) VALUES (${x[0]}, ${x[1]});`));
+    console.log("\n-- ARTICLE CATEGORIES")
+    articleCat.forEach(x => console.log(`INSERT INTO article_category (id_article, id_category) VALUES (${x[0]}, ${x[1]});`));
 
-  console.log("\n-- ARTICLE GENRES")
-  articleGen.forEach(x => console.log(`INSERT INTO article_genre (id_article, id_genre) VALUES (${x[0]}, ${x[1]});`));
+    console.log("\n-- ARTICLE GENRES")
+    articleGen.forEach(x => console.log(`INSERT INTO article_genre (id_article, id_genre) VALUES (${x[0]}, ${x[1]});`));
 
-  console.log("\n-- PICTURES")
-  pictures.forEach(x => console.log(`INSERT INTO Picture (id, url_full, url_thumbnail, id_article) VALUES (${x.id}, '${x.full}', '${x.thumb}', ${x.appid});`));
+    console.log("\n-- PICTURES")
+    pictures.forEach(x => console.log(`INSERT INTO Picture (id, url_full, url_thumbnail, id_article) VALUES (${x.id}, '${x.full}', '${x.thumb}', ${x.appid});`));
+  } catch (error) {
+    console.error(error)
+  }
 }
 
 main();
