@@ -1,6 +1,7 @@
 import React from "react";
 
 type ThemeType = {
+  body: string;
   button: {
     primary: string;
     secondary: string;
@@ -8,10 +9,11 @@ type ThemeType = {
 };
 
 const initialTheme: ThemeType = {
-    button: {
-        primary: "bg-gray-700 py-2 px-4 hover:bg-gray-600",
-        secondary: "",
-    }
+  body: "bg-gray-800 text-white",
+  button: {
+    primary: "bg-gray-700 py-2 px-4 hover:bg-gray-600",
+    secondary: "",
+  },
 };
 
 const ThemeContext = React.createContext<ThemeType>(initialTheme);
