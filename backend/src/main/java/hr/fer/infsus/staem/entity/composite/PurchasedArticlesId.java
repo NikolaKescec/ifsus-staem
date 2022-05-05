@@ -5,11 +5,11 @@ import java.util.Objects;
 
 public class PurchasedArticlesId implements Serializable {
 
-    private Long user;
+    private String user;
 
     private Long article;
 
-    public PurchasedArticlesId(Long id_user, Long id_article) {
+    public PurchasedArticlesId(String id_user, Long id_article) {
         this.user = id_user;
         this.article = id_article;
     }

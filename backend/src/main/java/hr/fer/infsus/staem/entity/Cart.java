@@ -1,5 +1,7 @@
 package hr.fer.infsus.staem.entity;
 
+import lombok.Data;
+
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.Id;
@@ -15,6 +17,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "cart")
+@Data
 public class Cart {
 
     @Id
@@ -23,7 +26,7 @@ public class Cart {
     private LocalDate purchaseDate;
 
     @OneToOne
-    @JoinColumn(foreignKey = @ForeignKey(name = "id_user"), nullable = false)
+    @JoinColumn(name = "id_user", foreignKey = @ForeignKey(name = "id_user"), nullable = false)
     private Users user;
 
     @ManyToMany
@@ -31,30 +34,6 @@ public class Cart {
         joinColumns = { @JoinColumn(name = "id_cart", nullable = false) },
         inverseJoinColumns = { @JoinColumn(name = "id_article", nullable = false) })
     private List<Article> articles;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public LocalDate getPurchaseDate() {
-        return purchaseDate;
-    }
-
-    public void setPurchaseDate(LocalDate purchaseDate) {
-        this.purchaseDate = purchaseDate;
-    }
-
-    public Users getUser() {
-        return user;
-    }
-
-    public void setUser(Users user) {
-        this.user = user;
-    }
 
     public List<Article> getArticles() {
         if (articles == null) {

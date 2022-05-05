@@ -98,22 +98,17 @@ CREATE TABLE Role
 
 CREATE TABLE Users
 (
-  id BIGINT NOT NULL,
-  email VARCHAR(255) NOT NULL,
-  first_name VARCHAR(255) NOT NULL,
-  last_name VARCHAR(255) NOT NULL,
-  profile_picture_url TEXT NOT NULL,
+  id VARCHAR(255) NOT NULL,
   id_role BIGINT NOT NULL,
   PRIMARY KEY (id),
-  FOREIGN KEY (id_role) REFERENCES Role(id),
-  UNIQUE (email)
+  FOREIGN KEY (id_role) REFERENCES Role(id)
 );
 
 CREATE TABLE Cart
 (
   id BIGINT NOT NULL,
   purchase_date DATE,
-  id_user BIGINT NOT NULL,
+  id_user VARCHAR(255)  NOT NULL,
   PRIMARY KEY (id),
   FOREIGN KEY (id_user) REFERENCES Users(id)
 );
@@ -122,7 +117,7 @@ CREATE TABLE Purchased_Articles
 (
   date_of_purchase DATE NOT NULL,
   price DECIMAL NOT NULL,
-  id_user BIGINT NOT NULL,
+  id_user VARCHAR(255)  NOT NULL,
   id_article BIGINT NOT NULL,
   PRIMARY KEY (id_user, id_article),
   FOREIGN KEY (id_user) REFERENCES Users(id),

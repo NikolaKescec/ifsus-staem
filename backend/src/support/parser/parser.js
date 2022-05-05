@@ -41,54 +41,70 @@ const main = async () => {
     try {
       details = (await axios.get(`https://store.steampowered.com/api/appdetails?appids=${appId}`)).data[appId].data;
 
+      if (!details) return;
+      if (!details.name || details.name.toLowerCase().includes("test") || details.name.toLowerCase().includes("demo")) return;
+
       availableArticles.add(appId)
 
-      const type = details.type.toUpperCase();
-      const baseArticle = type === "dlc" ? details.fullgame.appid : "NULL";
+      const type = details.type?.toUpperCase() ?? "GAME";
+      const baseArticle = type === "DLC" ? details.fullgame.appid : "NULL";
 
-      if (details.type === "demo") return;
-      if (!details.name || details.name.toLowerCase().includes("test") || details.name.toLowerCase().includes("demo")) return;
-      if (details.type === "dlc" && !availableArticles.has(baseArticle)) {
+      if (type === "DEMO") return;
+      if (type === "DLC" && !availableArticles.has(baseArticle)) {
+        console.error(`DLC ${appId} has no base game ${baseArticle}. FETCHING!`);
         if (count + 1 !== limit) return;
         await retrieveAndSaveDetails(baseArticle)
       }
 
-      for (let x of details.developers) {
-        if (developers.includes(x)) continue;
-        developers.push(x);
-      }
-      for (let x of details.developers) {
-        articleDev.push([appId, developers.indexOf(x)]);
-      }
-      for (let x of details.publishers) {
-        if (publishers.includes(x)) continue;
-        publishers.push(x);
-      }
-      for (let x of details.publishers) {
-        articlePub.push([appId, publishers.indexOf(x)]);
-      }
-      for (let x of details.categories) {
-        if (categories.includes(x.description)) continue;
-        categories.push(x.description);
-      }
-      for (let x of details.categories) {
-        articleCat.push([appId, categories.indexOf(x.description)]);
-      }
-      for (let x of details.genres) {
-        if (genres.includes(x.description)) continue;
-        genres.push(x.description);
-      }
-      for (let x of details.genres) {
-        articleGen.push([appId, genres.indexOf(x.description)]);
+      if (details.developers) {
+        for (let x of details.developers) {
+          if (developers.includes(x)) continue;
+          developers.push(x);
+        }
+        for (let x of details.developers) {
+          articleDev.push([appId, developers.indexOf(x)]);
+        }
       }
 
-      articles.push(`INSERT INTO Article (id, title, description, price, currency, picture_url, release_date, article_type, id_base_article) VALUES (${appId}, '${escapeString(details.name)}', '${escapeString(details.detailed_description)}', ${details.price_overview.initial / 100}, '${details.price_overview.currency}', '${details.header_image}', ${convertDate(details.release_date.date)}, '${type}', ${baseArticle});`);
+      if (details.publishers) {
+        for (let x of details.publishers) {
+          if (publishers.includes(x)) continue;
+          publishers.push(x);
+        }
+        for (let x of details.publishers) {
+          articlePub.push([appId, publishers.indexOf(x)]);
+        }
+      }
 
-      for (x of details.screenshots) {
-        pictures.push({id: pictureId++, full: x.path_full, thumb: x.path_thumbnail, appid: appId});
+      if (details.categories) {
+        for (let x of details.categories) {
+          if (categories.includes(x.description)) continue;
+          categories.push(x.description);
+        }
+        for (let x of details.categories) {
+          articleCat.push([appId, categories.indexOf(x.description)]);
+        }
+      }
+
+      if (details.genres) {
+        for (let x of details.genres) {
+          if (genres.includes(x.description)) continue;
+          genres.push(x.description);
+        }
+        for (let x of details.genres) {
+          articleGen.push([appId, genres.indexOf(x.description)]);
+        }
+      }
+
+      articles.push(`INSERT INTO Article (id, title, description, price, currency, picture_url, release_date, article_type, id_base_article) VALUES (${appId}, '${escapeString(details.name)}', '${escapeString(details.detailed_description)}', ${(details.price_overview?.initial ?? 0) / 100}, '${details.price_overview?.currency ?? "EUR"}', '${details.header_image}', ${convertDate(details.release_date.date)}, '${type}', ${baseArticle});`);
+
+      if (details.screenshots) {
+        for (x of details.screenshots) {
+          pictures.push({id: pictureId++, full: x.path_full, thumb: x.path_thumbnail, appid: appId});
+        }
       }
     } catch (error) {
-      console.error(error, details)
+      console.error(error, appId)
     }
   }
 
@@ -98,7 +114,7 @@ const main = async () => {
 
   for (let app of apps) {
     try {
-      if(Math.random() > 0.5) continue;
+      if (Math.random() >= 0.4) continue;
       if (!app.name || app.name.toLowerCase().includes("test") || app.name.toLowerCase().includes("demo")) continue;
 
       await retrieveAndSaveDetails(app.appid)

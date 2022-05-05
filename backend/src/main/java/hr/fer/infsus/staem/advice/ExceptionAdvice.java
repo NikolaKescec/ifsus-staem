@@ -1,6 +1,6 @@
 package hr.fer.infsus.staem.advice;
 
-import hr.fer.infsus.staem.exception.EntityNotFound;
+import hr.fer.infsus.staem.exception.EntityNotFoundException;
 import lombok.NoArgsConstructor;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @NoArgsConstructor
 public class ExceptionAdvice {
 
-    @ExceptionHandler(value = { EntityNotFound.class })
-    public ResponseEntity<String> handleEntityNotFoundException(EntityNotFound exception) {
+    @ExceptionHandler(value = { EntityNotFoundException.class })
+    public ResponseEntity<String> handleEntityNotFoundException(EntityNotFoundException exception) {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
     }
 

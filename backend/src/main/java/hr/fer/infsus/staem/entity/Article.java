@@ -1,6 +1,6 @@
 package hr.fer.infsus.staem.entity;
 
-import org.hibernate.annotations.Type;
+import lombok.Data;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -9,9 +9,11 @@ import javax.persistence.ForeignKey;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,20 +21,25 @@ import java.util.List;
 
 @Entity
 @Table(name = "article")
+@Data
 public class Article {
 
     @Id
     private Long id;
 
-    @Type(type = "text")
     private String title;
 
-    private Double description;
+    @Lob
+    @Column(columnDefinition = "text")
+    private String description;
+
+    private BigDecimal price;
 
     @Column(length = 3)
     private String currency;
 
-    @Type(type = "text")
+    @Lob
+    @Column(columnDefinition = "text")
     private String pictureUrl;
 
     private LocalDate releaseDate;
@@ -41,8 +48,8 @@ public class Article {
     private String articleType;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(foreignKey = @ForeignKey(name = "id_base_article"))
-    private List<Article> dlcContent;
+    @JoinColumn(name = "id_base_article", foreignKey = @ForeignKey(name = "id_base_article"))
+    private List<Article> dlcs;
 
     @ManyToMany()
     @JoinTable(name = "article_publisher",
@@ -68,76 +75,20 @@ public class Article {
         inverseJoinColumns = { @JoinColumn(name = "id_genre", nullable = false) })
     private List<Genre> genres;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public Double getDescription() {
-        return description;
-    }
-
-    public void setDescription(Double description) {
-        this.description = description;
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
-
-    public void setCurrency(String currency) {
-        this.currency = currency;
-    }
-
-    public String getPictureUrl() {
-        return pictureUrl;
-    }
-
-    public void setPictureUrl(String pictureUrl) {
-        this.pictureUrl = pictureUrl;
-    }
-
-    public LocalDate getReleaseDate() {
-        return releaseDate;
-    }
-
-    public void setReleaseDate(LocalDate releaseDate) {
-        this.releaseDate = releaseDate;
-    }
-
-    public String getArticleType() {
-        return articleType;
-    }
-
-    public void setArticleType(String articleType) {
-        this.articleType = articleType;
-    }
-
-    public List<Article> getDlcContent() {
-        if (dlcContent == null) {
+    public List<Article> getDlcs() {
+        if (dlcs == null) {
             return Collections.emptyList();
         } else {
-            return new ArrayList<>(dlcContent);
+            return new ArrayList<>(dlcs);
         }
     }
 
-    public void setDlcContent(List<Article> dlcContent) {
-        if (this.dlcContent == null) {
-            this.dlcContent = new ArrayList<>(dlcContent);
+    public void setDlcs(List<Article> dlcContent) {
+        if (this.dlcs == null) {
+            this.dlcs = new ArrayList<>(dlcContent);
         } else {
-            this.dlcContent.clear();
-            this.dlcContent.addAll(dlcContent);
+            this.dlcs.clear();
+            this.dlcs.addAll(dlcContent);
         }
     }
 
