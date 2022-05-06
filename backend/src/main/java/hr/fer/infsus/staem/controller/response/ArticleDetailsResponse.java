@@ -35,4 +35,6 @@ public class ArticleDetailsResponse {
 
     private List<GenreResponse> genres;
 
+    private List<PictureResponse> pictures;
+
 }

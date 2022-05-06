@@ -8,4 +8,6 @@ public interface CategoryQueryService {
 
     List<Category> findAll();
 
+    Category findById(Long id);
+
 }

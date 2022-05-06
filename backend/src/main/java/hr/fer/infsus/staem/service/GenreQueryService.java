@@ -8,4 +8,6 @@ public interface GenreQueryService {
 
     List<Genre> findAll();
 
+    Genre findById(Long id);
+
 }

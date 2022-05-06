@@ -8,4 +8,6 @@ public interface PublisherQueryService {
 
     List<Publisher> findAll();
 
+    Publisher findById(Long id);
+
 }

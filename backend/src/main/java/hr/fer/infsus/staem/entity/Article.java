@@ -1,11 +1,14 @@
 package hr.fer.infsus.staem.entity;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -17,14 +20,19 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "article")
-@Data
+@Getter
+@Setter
 public class Article {
 
     @Id
+    @GeneratedValue(generator = "max-generator")
+    @GenericGenerator(name = "max-generator", strategy = "hr.fer.infsus.staem.generator.StaemEntityIdGenerator")
     private Long id;
 
     private String title;
@@ -55,25 +63,65 @@ public class Article {
     @JoinTable(name = "article_publisher",
         joinColumns = { @JoinColumn(name = "id_article", nullable = false) },
         inverseJoinColumns = { @JoinColumn(name = "id_publisher", nullable = false) })
-    private List<Publisher> publishers;
+    private Set<Publisher> publishers;
 
     @ManyToMany
     @JoinTable(name = "article_developer",
         joinColumns = { @JoinColumn(name = "id_article", nullable = false) },
         inverseJoinColumns = { @JoinColumn(name = "id_developer", nullable = false) })
-    private List<Developer> developers;
+    private Set<Developer> developers;
 
     @ManyToMany
     @JoinTable(name = "article_category",
         joinColumns = { @JoinColumn(name = "id_article", nullable = false) },
         inverseJoinColumns = { @JoinColumn(name = "id_category", nullable = false) })
-    private List<Category> categories;
+    private Set<Category> categories;
 
     @ManyToMany
     @JoinTable(name = "article_genre",
         joinColumns = { @JoinColumn(name = "id_article", nullable = false) },
         inverseJoinColumns = { @JoinColumn(name = "id_genre", nullable = false) })
-    private List<Genre> genres;
+    private Set<Genre> genres;
+
+    @OneToMany
+    @JoinColumn(name = "id_article", foreignKey = @ForeignKey(name = "id_article"), nullable = false)
+    private List<Picture> pictures;
+
+    public void addPublisher(Publisher publisher) {
+        this.publishers.add(publisher);
+        publisher.getArticles().add(this);
+    }
+
+    public void removePublisher(Publisher publisher) {
+        this.publishers.remove(publisher);
+    }
+
+    public void addDeveloper(Developer developer) {
+        this.developers.add(developer);
+        developer.getArticles().add(this);
+    }
+
+    public void removeDeveloper(Developer developer) {
+        this.developers.remove(developer);
+    }
+
+    public void addCategory(Category category) {
+        this.categories.add(category);
+        category.getArticles().add(this);
+    }
+
+    public void removeCategory(Category category) {
+        this.categories.remove(category);
+    }
+
+    public void addGenre(Genre genre) {
+        this.genres.add(genre);
+        genre.getArticles().add(this);
+    }
+
+    public void removeGenre(Genre genre) {
+        this.genres.remove(genre);
+    }
 
     public List<Article> getDlcs() {
         if (dlcs == null) {
@@ -92,71 +140,88 @@ public class Article {
         }
     }
 
-    public List<Publisher> getPublishers() {
+    public Set<Publisher> getPublishers() {
         if (publishers == null) {
-            return Collections.emptyList();
+            return Collections.emptySet();
         } else {
-            return new ArrayList<>(publishers);
+            return new LinkedHashSet<>(publishers);
         }
     }
 
-    public void setPublishers(List<Publisher> publishers) {
+    public void setPublishers(Set<Publisher> publishers) {
         if (this.publishers == null) {
-            this.publishers = new ArrayList<>(publishers);
+            this.publishers = new LinkedHashSet<>(publishers);
         } else {
             this.publishers.clear();
             this.publishers.addAll(publishers);
         }
     }
 
-    public List<Developer> getDevelopers() {
+    public Set<Developer> getDevelopers() {
         if (developers == null) {
-            return Collections.emptyList();
+            return Collections.emptySet();
         } else {
-            return new ArrayList<>(developers);
+            return new LinkedHashSet<>(developers);
         }
     }
 
-    public void setDevelopers(List<Developer> developers) {
+    public void setDevelopers(Set<Developer> developers) {
         if (this.developers == null) {
-            this.developers = new ArrayList<>(developers);
+            this.developers = new LinkedHashSet<>(developers);
         } else {
             this.developers.clear();
             this.developers.addAll(developers);
         }
     }
 
-    public List<Category> getCategories() {
+    public Set<Category> getCategories() {
         if (categories == null) {
-            return Collections.emptyList();
+            return Collections.emptySet();
         } else {
-            return new ArrayList<>(categories);
+            return new LinkedHashSet<>(categories);
         }
     }
 
-    public void setCategories(List<Category> categories) {
+    public void setCategories(Set<Category> categories) {
         if (this.categories == null) {
-            this.categories = new ArrayList<>(categories);
+            this.categories = new LinkedHashSet<>(categories);
         } else {
             this.categories.clear();
             this.categories.addAll(categories);
         }
     }
 
-    public List<Genre> getGenres() {
+    public Set<Genre> getGenres() {
         if (genres == null) {
-            return Collections.emptyList();
+            return Collections.emptySet();
         } else {
-            return new ArrayList<>(genres);
+            return new LinkedHashSet<>(genres);
         }
     }
 
     public void setGenres(List<Genre> genres) {
         if (this.genres == null) {
-            this.genres = new ArrayList<>(genres);
+            this.genres = new LinkedHashSet<>(genres);
         } else {
             this.genres.clear();
             this.genres.addAll(genres);
+        }
+    }
+
+    public List<Picture> getPictures() {
+        if (pictures == null) {
+            return Collections.emptyList();
+        } else {
+            return new ArrayList<>(pictures);
+        }
+    }
+
+    public void setPictures(List<Picture> pictures) {
+        if (this.pictures == null) {
+            this.pictures = new ArrayList<>(pictures);
+        } else {
+            this.pictures.clear();
+            this.pictures.addAll(pictures);
         }
     }
 

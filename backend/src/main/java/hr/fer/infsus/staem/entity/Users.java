@@ -1,6 +1,7 @@
 package hr.fer.infsus.staem.entity;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
@@ -11,7 +12,8 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "users")
-@Data
+@Getter
+@Setter
 public class Users {
 
     @Id
