@@ -8,4 +8,6 @@ public interface DeveloperQueryService {
 
     List<Developer> findAll();
 
+    Developer findById(Long id);
+
 }

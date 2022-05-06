@@ -6,4 +6,6 @@ public interface UserQueryService {
 
     Users findById(Long id);
 
+    boolean existsById(Long id);
+
 }

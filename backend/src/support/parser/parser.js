@@ -1,7 +1,7 @@
 const apps = require('./apps');
 const axios = require("axios");
 
-const limit = 69
+const limit = apps.length
 
 const monthMap = {
   "Jan": 1,
@@ -43,12 +43,20 @@ const main = async () => {
 
     let details;
     try {
+      if (count !== 0 && count % 60 === 0) {
+        console.error(`${count} divisible by 60, waiting for 30 seconds!`);
+        await new Promise(resolve => setTimeout(resolve, 30000));
+      }
       count++
       details = (await axios.get(`https://store.steampowered.com/api/appdetails?appids=${appId}`)).data[appId].data;
 
       if (!details) return;
       if (!details.name || details.name.toLowerCase().includes("test") || details.name.toLowerCase().includes("demo")) return;
 
+      if (availableArticles.has(appId)) {
+        console.error(`${appId} already exists`);
+        return;
+      }
       availableArticles.add(appId)
 
       const type = details.type?.toUpperCase() ?? "GAME";

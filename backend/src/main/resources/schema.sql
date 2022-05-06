@@ -91,7 +91,7 @@ CREATE TABLE Article_Genre
 
 CREATE TABLE Role
 (
-  id BIGINT NOT NULL,
+  id BIGSERIAL NOT NULL,
   name VARCHAR(50) NOT NULL,
   PRIMARY KEY (id)
 );
@@ -106,7 +106,7 @@ CREATE TABLE Users
 
 CREATE TABLE Cart
 (
-  id BIGINT NOT NULL,
+  id BIGSERIAL NOT NULL,
   purchase_date DATE,
   id_user VARCHAR(255)  NOT NULL,
   PRIMARY KEY (id),

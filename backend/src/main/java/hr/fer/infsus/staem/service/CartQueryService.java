@@ -6,4 +6,6 @@ public interface CartQueryService {
 
     Cart findByUserId(Long userId);
 
+    boolean existsById(Long id);
+
 }
