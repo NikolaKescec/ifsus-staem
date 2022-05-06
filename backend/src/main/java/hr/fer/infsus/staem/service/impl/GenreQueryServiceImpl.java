@@ -1,6 +1,7 @@
 package hr.fer.infsus.staem.service.impl;
 
 import hr.fer.infsus.staem.entity.Genre;
+import hr.fer.infsus.staem.exception.EntityNotFoundException;
 import hr.fer.infsus.staem.entity.Genre_;
 import hr.fer.infsus.staem.exception.EntityNotFoundException;
 import hr.fer.infsus.staem.repository.GenreRepository;
