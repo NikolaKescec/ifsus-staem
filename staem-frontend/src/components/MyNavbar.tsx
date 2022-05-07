@@ -65,6 +65,18 @@ function NavbarLinks() {
           <Text component={Link} to="/my-games" color="blue">
             My Games
           </Text>
+          <Text component={Link} to="/categories" color="blue">
+            Categories
+          </Text>
+          <Text component={Link} to="/developers" color="blue">
+            Developers
+          </Text>
+          <Text component={Link} to="/genres" color="blue">
+            Genres
+          </Text>
+          <Text component={Link} to="/publishers" color="blue">
+            Publishers
+          </Text>
         </>
       )}
     </>
