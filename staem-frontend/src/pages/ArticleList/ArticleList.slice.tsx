@@ -47,6 +47,10 @@ const articleListSlice = createSlice({
     page: (state, action) => {
       state.page.pageNumber = action.payload;
     },
+    reset: (state) => {
+      state.filter = initialFilterState;
+      state.page.pageNumber = 0;
+    },
   },
   extraReducers: (builder) => {
     builder

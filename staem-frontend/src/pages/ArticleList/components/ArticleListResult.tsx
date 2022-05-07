@@ -39,11 +39,12 @@ export default function ArticleListResult() {
     dispatch(actions.page(pageNumber));
   };
 
-  if (status === "error") {
-  }
-
   if (status !== "success") {
-    return <Loader />;
+    return (
+      <Center p={30}>
+        <Loader />
+      </Center>
+    );
   }
 
   return <ArticleList />;
@@ -57,7 +58,7 @@ function ArticleList() {
   const page = useSelector(selectors.page);
 
   const onPageChange = (pageNumber: number) => {
-    dispatch(actions.page(pageNumber));
+    dispatch(actions.page(pageNumber - 1));
   };
 
   return (
@@ -92,13 +93,15 @@ function ArticleList() {
             </Grid>
           </Paper>
         ))}
-        <Center my={20}>
-          <Pagination
-            page={page.pageNumber}
-            total={page.totalPages - 1}
-            onChange={onPageChange}
-          />
-        </Center>
+        {page.totalPages > 0 && (
+          <Center my={20}>
+            <Pagination
+              page={page.pageNumber + 1}
+              total={page.totalPages}
+              onChange={onPageChange}
+            />
+          </Center>
+        )}
       </Stack>
     </>
   );

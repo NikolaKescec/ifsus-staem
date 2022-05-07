@@ -31,12 +31,12 @@ export default function ArticleListFilter() {
   });
 
   const onSubmit = (values: Filter) => {
-    console.log(values);
+    dispatch(actions.filter(values));
   };
 
   const onReset = () => {
     form.reset();
-    dispatch(actions.filter(initialFilterState as ArticlesFilter));
+    dispatch(actions.reset());
   };
 
   return (
@@ -77,7 +77,18 @@ export default function ArticleListFilter() {
           <Grid.Col span={4}>
             <Text>Price</Text>
             <Stack py={10}>
-              <RangeSlider size="md" {...form.getInputProps("priceRange")} />
+              <RangeSlider
+                size="md"
+                max={100}
+                marks={[
+                  { value: 0, label: "0" },
+                  { value: 25, label: "25" },
+                  { value: 50, label: "50" },
+                  { value: 70, label: "75" },
+                  { value: 100, label: "100" },
+                ]}
+                {...form.getInputProps("priceRange")}
+              />
             </Stack>
           </Grid.Col>
         </Grid>

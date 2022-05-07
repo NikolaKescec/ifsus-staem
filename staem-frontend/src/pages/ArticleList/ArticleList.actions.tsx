@@ -7,6 +7,8 @@ type Filter = ArticlesFilter;
 
 export const filter = createAction<Filter>("articleList/filter");
 
+export const reset = createAction("articleList/reset");
+
 export const findAll = createAsyncThunk("articleList/findAll", api.findAll);
 
 export const page = createAction<number>("articleList/page");
