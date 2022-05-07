@@ -109,7 +109,7 @@ export default function CategoryList() {
         />
       )}
 
-      {updateModal && modalDeveloper && (
+      {deleteModal && modalDeveloper && (
         <DeleteCatalogEntryModal
           title="developer"
           modalOpen={deleteModal}
