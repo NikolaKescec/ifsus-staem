@@ -59,7 +59,7 @@ export default function CreateNewCatalogEntry({
 
   return (
     <Paper p={20}>
-      <Text align="center">Create new ${title}</Text>
+      <Text align="center">Create new {title}</Text>
       <form onSubmit={form.onSubmit(onSubmit)}>
         <Grid>
           <Grid.Col span={10}>
