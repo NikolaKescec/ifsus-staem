@@ -1,7 +1,16 @@
 import React from "react";
 
-import { Avatar, Button, Group, Header, Menu, Text } from "@mantine/core";
-import { IconLogout, IconUser } from "@tabler/icons";
+import {
+  ActionIcon,
+  Avatar,
+  Button,
+  Group,
+  Header,
+  Menu,
+  Text,
+  useMantineColorScheme,
+} from "@mantine/core";
+import { IconLogout, IconMoonStars, IconSun, IconUser } from "@tabler/icons";
 
 import { Link, useNavigate } from "react-router-dom";
 
@@ -17,11 +26,29 @@ export default function MyNavbar() {
           <NavbarLinks />
         </Group>
         <Group spacing="sm">
+          <ThemeToggle />
           <LoginButton />
           <UserProfile />
         </Group>
       </Group>
     </Header>
+  );
+}
+
+function ThemeToggle() {
+  const { colorScheme, toggleColorScheme } = useMantineColorScheme();
+  const dark = colorScheme === "dark";
+
+  return (
+    <ActionIcon
+      size="lg"
+      variant="outline"
+      color={dark ? "yellow" : "blue"}
+      onClick={() => toggleColorScheme()}
+      title="Toggle color scheme"
+    >
+      {dark ? <IconSun size={20} /> : <IconMoonStars size={20} />}
+    </ActionIcon>
   );
 }
 

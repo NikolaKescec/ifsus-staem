@@ -20,7 +20,6 @@ import * as actions from "../ArticleList.actions";
 import * as selectors from "../ArticleList.selectors";
 import { useAppDispatch } from "../../../store/store";
 import { Filter, initialFilterState } from "../ArticleList.slice";
-import { ArticlesFilter } from "../../../api/types";
 
 export default function ArticleListFilter() {
   const dispatch = useAppDispatch();
@@ -35,7 +34,7 @@ export default function ArticleListFilter() {
   };
 
   const onReset = () => {
-    form.reset();
+    form.setValues(initialFilterState);
     dispatch(actions.reset());
   };
 

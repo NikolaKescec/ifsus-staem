@@ -3,7 +3,12 @@ import React from "react";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 
-import { AppShell, MantineProvider } from "@mantine/core";
+import {
+  AppShell,
+  ColorScheme,
+  ColorSchemeProvider,
+  MantineProvider,
+} from "@mantine/core";
 
 import { Auth0Provider } from "@auth0/auth0-react";
 
@@ -11,6 +16,7 @@ import AppRoutes from "./AppRoutes";
 import MyNavbar from "./components/MyNavbar";
 import store from "./store/store";
 import SharedProvider from "./components/SharedProvider";
+import { useHotkeys, useLocalStorage } from "@mantine/hooks";
 
 export default function App() {
   return (
@@ -29,12 +35,28 @@ export default function App() {
 }
 
 function UiProvider() {
+  const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
+    key: "mantine-color-scheme",
+    defaultValue: "light",
+    getInitialValueInEffect: true,
+  });
+
+  const toggleColorScheme = (value?: ColorScheme) =>
+    setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
+
+  useHotkeys([["mod+J", () => toggleColorScheme()]]);
+
   return (
-    <MantineProvider theme={{ colorScheme: "dark" }}>
-      <BrowserRouter>
-        <AppLayout />
-      </BrowserRouter>
-    </MantineProvider>
+    <ColorSchemeProvider
+      colorScheme={colorScheme}
+      toggleColorScheme={toggleColorScheme}
+    >
+      <MantineProvider theme={{ colorScheme }}>
+        <BrowserRouter>
+          <AppLayout />
+        </BrowserRouter>
+      </MantineProvider>
+    </ColorSchemeProvider>
   );
 }
 
@@ -46,12 +68,7 @@ function AppLayout() {
       header={<MyNavbar />}
       style={{ display: "flex", flexDirection: "column", height: "100%" }}
       styles={(theme) => ({
-        body: {
-          display: "flex",
-          flexDirection: "column",
-        },
         main: {
-          flexGrow: 3,
           backgroundColor:
             theme.colorScheme === "dark"
               ? theme.colors.dark[8]
