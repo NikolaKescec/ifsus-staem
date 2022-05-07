@@ -1,27 +1,43 @@
 import React from "react";
 
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 import {
   ActionIcon,
+  Button,
   Center,
   Container,
   Group,
+  Mark,
+  Modal,
   Pagination,
   Paper,
   Table,
+  Text,
 } from "@mantine/core";
 import { usePagination } from "@mantine/hooks";
-import { IconPencil, IconTrash } from "@tabler/icons";
+import { IconCheck, IconCircleX, IconPencil, IconTrash } from "@tabler/icons";
+import { showNotification } from "@mantine/notifications";
 
+import * as api from "../../api/publishers";
 import { PublisherResponse } from "../../api/types";
-import * as publisherSelectors from "../../store/shared/publisher.selectors";
+import * as actions from "../../store/shared/publisher.actions";
+import * as selectors from "../../store/shared/publisher.selectors";
+import { useAppDispatch } from "../../store/store";
 
-export default function PublisherList() {
-  const publishers = useSelector(publisherSelectors.result);
+export default function CategoryList() {
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
+  const result = useSelector(selectors.result);
+
+  const [publisherToDelete, setPublisherToDelete] =
+    React.useState<PublisherResponse | null>(null);
+  const [modalOpen, setModalOpen] = React.useState(false);
 
   const pageSize = 10;
-  const totalPages = Math.ceil(publishers.length / pageSize);
+  const totalPages = Math.ceil(result.length / pageSize);
 
   const [page, onPageChange] = React.useState(1);
   const pagination = usePagination({
@@ -29,9 +45,36 @@ export default function PublisherList() {
     total: totalPages,
   });
 
-  const sortedPublishers = [...publishers].sort((a, b) =>
-    a.id < b.id ? -1 : 1
-  );
+  const publishers = [...result].sort((a, b) => (a.id < b.id ? -1 : 1));
+
+  const handleDelete = (publisher: PublisherResponse) => {
+    setPublisherToDelete(publisher);
+    setModalOpen(true);
+  };
+
+  const onDelete = async () => {
+    setModalOpen(false);
+
+    try {
+      await api.deletePublisher(publisherToDelete!.id);
+
+      showNotification({
+        title: "Success",
+        message: "Publisher deleted successfully",
+        color: "green",
+        icon: <IconCheck />,
+      });
+
+      dispatch(actions.findAll());
+    } catch (error) {
+      showNotification({
+        title: "Error",
+        message: "An error occurred while deleting the publisher",
+        color: "red",
+        icon: <IconCircleX />,
+      });
+    }
+  };
 
   return (
     <Container size="md">
@@ -48,7 +91,7 @@ export default function PublisherList() {
             <th>Actions</th>
           </thead>
           <tbody>
-            {sortedPublishers.map((publisher: PublisherResponse) => {
+            {publishers.map((publisher: PublisherResponse) => {
               if (
                 page * pageSize - pageSize <= publisher.id &&
                 publisher.id < page * pageSize
@@ -59,10 +102,14 @@ export default function PublisherList() {
                     <td>{publisher.name}</td>
                     <td>
                       <Group position="center">
-                        <ActionIcon>
+                        <ActionIcon
+                          onClick={() =>
+                            navigate(`/publishers/${publisher.id}/update`)
+                          }
+                        >
                           <IconPencil color="yellow" />
                         </ActionIcon>
-                        <ActionIcon>
+                        <ActionIcon onClick={() => handleDelete(publisher)}>
                           <IconTrash color="red" />
                         </ActionIcon>
                       </Group>
@@ -74,6 +121,27 @@ export default function PublisherList() {
           </tbody>
         </Table>
       </Paper>
+
+      <Modal
+        opened={modalOpen}
+        onClose={() => setModalOpen(false)}
+        title="Delete Publisher"
+      >
+        <Text>
+          Are you sure you want to delete{" "}
+          <Mark color="gray" px={5} py={2}>
+            {publisherToDelete?.name}
+          </Mark>
+        </Text>
+        <Group position="right" py={20}>
+          <Button color="blue" onClick={() => setModalOpen(false)}>
+            Close
+          </Button>
+          <Button color="red" onClick={onDelete}>
+            Delete
+          </Button>
+        </Group>
+      </Modal>
 
       <Center my={20}>
         <Pagination

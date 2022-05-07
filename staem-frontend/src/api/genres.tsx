@@ -10,3 +10,17 @@ export async function findAll(): Promise<GenreResponse[]> {
 
   return response.json();
 }
+
+// DELETE /genre/:id
+export async function deleteGenre(id: number): Promise<void> {
+  const response = await fetch(paths.genres.delete(id), {
+    method: "DELETE",
+    headers: getBearerToken(),
+  });
+
+  if (response.status !== 204) {
+    throw new Error(`Unexpected status code: ${response.status}`);
+  }
+
+  return Promise.resolve();
+}

@@ -17,6 +17,7 @@ import MyNavbar from "./components/MyNavbar";
 import store from "./store/store";
 import SharedProvider from "./components/SharedProvider";
 import { useHotkeys, useLocalStorage } from "@mantine/hooks";
+import { NotificationsProvider } from "@mantine/notifications";
 
 export default function App() {
   return (
@@ -52,9 +53,11 @@ function UiProvider() {
       toggleColorScheme={toggleColorScheme}
     >
       <MantineProvider theme={{ colorScheme }}>
-        <BrowserRouter>
-          <AppLayout />
-        </BrowserRouter>
+        <NotificationsProvider>
+          <BrowserRouter>
+            <AppLayout />
+          </BrowserRouter>
+        </NotificationsProvider>
       </MantineProvider>
     </ColorSchemeProvider>
   );

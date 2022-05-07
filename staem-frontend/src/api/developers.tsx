@@ -10,3 +10,17 @@ export async function findAll(): Promise<DeveloperResponse[]> {
 
   return response.json();
 }
+
+// DELETE /developer/:id
+export async function deleteDeveloper(id: number): Promise<void> {
+  const response = await fetch(paths.developers.delete(id), {
+    method: "DELETE",
+    headers: getBearerToken(),
+  });
+
+  if (response.status !== 204) {
+    throw new Error(`Unexpected status code: ${response.status}`);
+  }
+
+  return Promise.resolve();
+}

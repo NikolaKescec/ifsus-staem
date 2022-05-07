@@ -17,21 +17,27 @@ import {
   Text,
 } from "@mantine/core";
 import { usePagination } from "@mantine/hooks";
-import { IconPencil, IconTrash } from "@tabler/icons";
+import { IconCheck, IconCircleX, IconPencil, IconTrash } from "@tabler/icons";
+import { showNotification } from "@mantine/notifications";
 
+import * as api from "../../api/categories";
 import { CategoryResponse } from "../../api/types";
-import * as categorySelectors from "../../store/shared/category.selectors";
+import * as actions from "../../store/shared/category.actions";
+import * as selectors from "../../store/shared/category.selectors";
+import { useAppDispatch } from "../../store/store";
 
 export default function CategoryList() {
   const navigate = useNavigate();
-  const categories = useSelector(categorySelectors.result);
+  const dispatch = useAppDispatch();
+
+  const result = useSelector(selectors.result);
 
   const [categoryToDelete, setCategoryToDelete] =
     React.useState<CategoryResponse | null>(null);
   const [modalOpen, setModalOpen] = React.useState(false);
 
   const pageSize = 10;
-  const totalPages = Math.ceil(categories.length / pageSize);
+  const totalPages = Math.ceil(result.length / pageSize);
 
   const [page, onPageChange] = React.useState(1);
   const pagination = usePagination({
@@ -39,16 +45,36 @@ export default function CategoryList() {
     total: totalPages,
   });
 
-  const sortedCategories = [...categories].sort((a, b) =>
-    a.id < b.id ? -1 : 1
-  );
+  const categories = [...result].sort((a, b) => (a.id < b.id ? -1 : 1));
 
   const handleDelete = (category: CategoryResponse) => {
     setCategoryToDelete(category);
     setModalOpen(true);
   };
 
-  const onDelete = () => {};
+  const onDelete = async () => {
+    setModalOpen(false);
+
+    try {
+      await api.deleteCategory(categoryToDelete!.id);
+
+      showNotification({
+        title: "Success",
+        message: "Category deleted successfully",
+        color: "green",
+        icon: <IconCheck />,
+      });
+
+      dispatch(actions.findAll());
+    } catch (error) {
+      showNotification({
+        title: "Error",
+        message: "An error occurred while deleting the category",
+        color: "red",
+        icon: <IconCircleX />,
+      });
+    }
+  };
 
   return (
     <Container size="md">
@@ -65,7 +91,7 @@ export default function CategoryList() {
             <th>Actions</th>
           </thead>
           <tbody>
-            {sortedCategories.map((category: CategoryResponse) => {
+            {categories.map((category: CategoryResponse) => {
               if (
                 page * pageSize - pageSize <= category.id &&
                 category.id < page * pageSize
