@@ -1,10 +1,12 @@
 package hr.fer.infsus.staem.service.impl;
 
 import hr.fer.infsus.staem.entity.Developer;
+import hr.fer.infsus.staem.entity.Developer_;
 import hr.fer.infsus.staem.exception.EntityNotFoundException;
 import hr.fer.infsus.staem.repository.DeveloperRepository;
 import hr.fer.infsus.staem.service.DeveloperQueryService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,7 +19,7 @@ public class DeveloperQueryServiceImpl implements DeveloperQueryService {
 
     @Override
     public List<Developer> findAll() {
-        return developerRepository.findAll();
+        return developerRepository.findAll(Sort.by(Developer_.NAME));
     }
 
     @Override

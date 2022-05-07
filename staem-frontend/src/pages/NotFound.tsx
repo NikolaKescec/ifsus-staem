@@ -1,19 +1,29 @@
 import React from "react";
 
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
+import { Alert, Button, Card, Center } from "@mantine/core";
+import { IconAlertCircle } from "@tabler/icons";
 
 export default function NotFound() {
+  const navigate = useNavigate();
+
   return (
-    <div className="h-full flex flex-col items-center justify-center">
-      <div className="space-y-8 text-center bg-gray-700 p-16 rounded-xl text-xl">
-        <p>404! Page not Found</p>
-        <p>
-          Go to{" "}
-          <Link to="/" className="bg-blue-600 py-2 px-4 ml-1 rounded-xl hover:bg-blue-700">
-            Homepage
-          </Link>
-        </p>
-      </div>
-    </div>
+    <Center>
+      <Card>
+        <Card.Section p={10}>
+          <Alert icon={<IconAlertCircle />} title="Error!" color="red">
+            404! Page not Found!
+          </Alert>
+        </Card.Section>
+        <Card.Section p={10}>
+          <Center>
+            <Button size="lg" onClick={() => navigate("/")}>
+              Go to Homepage
+            </Button>
+          </Center>
+        </Card.Section>
+      </Card>
+    </Center>
   );
 }

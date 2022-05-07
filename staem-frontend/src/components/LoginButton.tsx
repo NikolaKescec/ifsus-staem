@@ -1,8 +1,9 @@
 import React from "react";
 
-import { useAuth0 } from "@auth0/auth0-react";
+import { Button } from "@mantine/core";
 
-import Button from "./Button";
+import { useAuth0 } from "@auth0/auth0-react";
+import { IconLogin } from "@tabler/icons";
 
 export default function LoginButton() {
   const { loginWithRedirect, isAuthenticated } = useAuth0();
@@ -15,5 +16,9 @@ export default function LoginButton() {
     return <></>;
   }
 
-  return <Button label="Log in" variant="primary" onClick={onClick} />;
+  return (
+    <Button onClick={onClick} leftIcon={<IconLogin />}>
+      Login
+    </Button>
+  );
 }

@@ -6,6 +6,7 @@ import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Data
 public class UpdatePublisherRequest {
@@ -14,7 +15,7 @@ public class UpdatePublisherRequest {
     @EntityExists(repository = PublisherRepository.class, message = "Publisher with given id does not exist")
     private Long id;
 
-    @NotEmpty(message = "Name is required")
+    @NotEmpty(message = "Publisher name is required")
+    @Size(min = 1, max = 255, message = "Publisher name must be between 1 and 255 characters")
     private String name;
-
 }

@@ -1,10 +1,12 @@
 package hr.fer.infsus.staem.service.impl;
 
 import hr.fer.infsus.staem.entity.Genre;
+import hr.fer.infsus.staem.entity.Genre_;
 import hr.fer.infsus.staem.exception.EntityNotFoundException;
 import hr.fer.infsus.staem.repository.GenreRepository;
 import hr.fer.infsus.staem.service.GenreQueryService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,7 +19,7 @@ public class GenreQueryServiceImpl implements GenreQueryService {
 
     @Override
     public List<Genre> findAll() {
-        return genreRepository.findAll();
+        return genreRepository.findAll(Sort.by(Genre_.NAME));
     }
 
     @Override

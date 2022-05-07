@@ -1,5 +1,3 @@
-import { AxiosRequestConfig } from "axios";
-
 export function createQuery(root: any): URLSearchParams {
   function helper(params: URLSearchParams, prefix: string, obj: any) {
     if (typeof obj === "undefined" || obj === null) {
@@ -27,15 +25,16 @@ export function createQuery(root: any): URLSearchParams {
   return params;
 }
 
-export function createBearerHeader(token?: string): AxiosRequestConfig {
+export function getBearerToken(): HeadersInit {
+  const token = localStorage.getItem("access_token");
+
   if (token) {
     return {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
     };
   } else {
-    return {};
+    return { "Content-Type": "application/json" };
   }
 }
 

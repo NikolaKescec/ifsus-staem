@@ -1,10 +1,12 @@
 package hr.fer.infsus.staem.service.impl;
 
 import hr.fer.infsus.staem.entity.Category;
+import hr.fer.infsus.staem.entity.Category_;
 import hr.fer.infsus.staem.exception.EntityNotFoundException;
 import hr.fer.infsus.staem.repository.CategoryRepository;
 import hr.fer.infsus.staem.service.CategoryQueryService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,7 +19,7 @@ public class CategoryQueryServiceImpl implements CategoryQueryService {
 
     @Override
     public List<Category> findAll() {
-        return categoryRepository.findAll();
+        return categoryRepository.findAll(Sort.by(Category_.NAME));
     }
 
     @Override
