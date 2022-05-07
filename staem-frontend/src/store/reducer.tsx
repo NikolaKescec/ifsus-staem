@@ -1,12 +1,18 @@
 import { combineReducers } from "@reduxjs/toolkit";
 
 import { articleList } from "../pages/ArticleList/ArticleList.slice";
-import { registry } from "./shared/registry";
+import { category } from "./shared/category";
+import { developer } from "./shared/developer";
+import { genre } from "./shared/genre";
+import { publisher } from "./shared/publisher";
 
 const pageReducers = { articleList };
 
 const sharedReducers = {
-  registry,
+  category,
+  developer,
+  genre,
+  publisher,
 };
 
 export const rootReducer = combineReducers({

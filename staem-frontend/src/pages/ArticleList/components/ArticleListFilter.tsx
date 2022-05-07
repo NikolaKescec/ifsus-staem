@@ -20,16 +20,19 @@ import * as actions from "../ArticleList.actions";
 import * as selectors from "../ArticleList.selectors";
 import { useAppDispatch } from "../../../store/store";
 import { Filter, initialFilterState } from "../ArticleList.slice";
-import * as registrySelectors from "../../../store/shared/registry.selectors";
+import * as categorySelectors from "../../../store/shared/category.selectors";
+import * as developerSelectors from "../../../store/shared/developer.selectors";
+import * as genreSelectors from "../../../store/shared/genre.selectors";
+import * as publisherSelectors from "../../../store/shared/publisher.selectors";
 
 export default function ArticleListFilter() {
   const dispatch = useAppDispatch();
 
   const filter = useSelector(selectors.filter);
-  const categories = useSelector(registrySelectors.categories);
-  const developers = useSelector(registrySelectors.developers);
-  const genres = useSelector(registrySelectors.genres);
-  const publishers = useSelector(registrySelectors.publishers);
+  const categories = useSelector(categorySelectors.result);
+  const developers = useSelector(developerSelectors.result);
+  const genres = useSelector(genreSelectors.result);
+  const publishers = useSelector(publisherSelectors.result);
 
   const mapDataToSelectItems = (data: { id: number; name: string }[]) => {
     return data.map((item) => ({

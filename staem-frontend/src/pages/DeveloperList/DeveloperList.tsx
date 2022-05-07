@@ -15,10 +15,10 @@ import { usePagination } from "@mantine/hooks";
 import { IconPencil, IconTrash } from "@tabler/icons";
 
 import { DeveloperResponse } from "../../api/types";
-import * as registrySelectors from "../../store/shared/registry.selectors";
+import * as registrySelectors from "../../store/shared/developer.selectors";
 
 export default function DeveloperList() {
-  const developers = useSelector(registrySelectors.developers);
+  const developers = useSelector(registrySelectors.result);
 
   const pageSize = 10;
   const totalPages = Math.ceil(developers.length / pageSize);

@@ -15,10 +15,10 @@ import { usePagination } from "@mantine/hooks";
 import { IconPencil, IconTrash } from "@tabler/icons";
 
 import { PublisherResponse } from "../../api/types";
-import * as registrySelectors from "../../store/shared/registry.selectors";
+import * as publisherSelectors from "../../store/shared/publisher.selectors";
 
 export default function PublisherList() {
-  const publishers = useSelector(registrySelectors.publishers);
+  const publishers = useSelector(publisherSelectors.result);
 
   const pageSize = 10;
   const totalPages = Math.ceil(publishers.length / pageSize);

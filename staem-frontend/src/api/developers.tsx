@@ -3,7 +3,7 @@ import { DeveloperResponse } from "./types";
 import { getBearerToken } from "./util";
 
 // GET /developer
-export async function getAll(): Promise<DeveloperResponse[]> {
+export async function findAll(): Promise<DeveloperResponse[]> {
   const response = await fetch(paths.developers.getAll, {
     headers: getBearerToken(),
   });

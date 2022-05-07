@@ -6,8 +6,14 @@ import { Center, LoadingOverlay } from "@mantine/core";
 
 import { useAuth0 } from "@auth0/auth0-react";
 
-import * as registryActions from "../store/shared/registry.actions";
-import * as registrySelectors from "../store/shared/registry.selectors";
+import * as categoryActions from "../store/shared/category.actions";
+import * as developerActions from "../store/shared/developer.actions";
+import * as genreActions from "../store/shared/genre.actions";
+import * as publisherActions from "../store/shared/publisher.actions";
+import * as categorySelectors from "../store/shared/category.selectors";
+import * as developerSelectors from "../store/shared/developer.selectors";
+import * as genreSelectors from "../store/shared/genre.selectors";
+import * as publisherSelectors from "../store/shared/publisher.selectors";
 import { useAppDispatch } from "../store/store";
 
 export default function SharedProvider({
@@ -16,16 +22,16 @@ export default function SharedProvider({
   const dispatch = useAppDispatch();
   const { isAuthenticated, getAccessTokenSilently } = useAuth0();
 
-  const categoryStatus = useSelector(registrySelectors.categoryStatus);
-  const developerStatus = useSelector(registrySelectors.developerStatus);
-  const genreStatus = useSelector(registrySelectors.genreStatus);
-  const publisherStatus = useSelector(registrySelectors.publisherStatus);
+  const categoryStatus = useSelector(categorySelectors.status);
+  const developerStatus = useSelector(developerSelectors.status);
+  const genreStatus = useSelector(genreSelectors.status);
+  const publisherStatus = useSelector(publisherSelectors.status);
 
   React.useEffect(() => {
-    dispatch(registryActions.getCategories());
-    dispatch(registryActions.getDevelopers());
-    dispatch(registryActions.getGenres());
-    dispatch(registryActions.getPublishers());
+    dispatch(categoryActions.findAll());
+    dispatch(developerActions.findAll());
+    dispatch(genreActions.findAll());
+    dispatch(publisherActions.findAll());
   }, [dispatch]);
 
   React.useEffect(() => {

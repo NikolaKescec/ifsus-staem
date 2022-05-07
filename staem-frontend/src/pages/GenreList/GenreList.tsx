@@ -15,10 +15,10 @@ import { usePagination } from "@mantine/hooks";
 import { IconPencil, IconTrash } from "@tabler/icons";
 
 import { GenreResponse } from "../../api/types";
-import * as registrySelectors from "../../store/shared/registry.selectors";
+import * as genreSelectors from "../../store/shared/genre.selectors";
 
 export default function GenreList() {
-  const genres = useSelector(registrySelectors.genres);
+  const genres = useSelector(genreSelectors.result);
 
   const pageSize = 10;
   const totalPages = Math.ceil(genres.length / pageSize);
