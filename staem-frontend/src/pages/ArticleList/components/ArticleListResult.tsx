@@ -1,9 +1,8 @@
 import React from "react";
-import { useAppDispatch } from "../../../store/store";
+
 import { useSelector } from "react-redux";
-import * as selectors from "../ArticleList.selectors";
-import * as actions from "../ArticleList.actions";
 import { useNavigate } from "react-router-dom";
+
 import {
   Center,
   Chip,
@@ -16,8 +15,12 @@ import {
   Stack,
   Text,
 } from "@mantine/core";
+
 import { ArticleResponse } from "../../../api/types";
 import { currencyMap } from "../../../constants/currency";
+import * as selectors from "../ArticleList.selectors";
+import * as actions from "../ArticleList.actions";
+import { useAppDispatch } from "../../../store/store";
 
 export default function ArticleListResult() {
   const dispatch = useAppDispatch();

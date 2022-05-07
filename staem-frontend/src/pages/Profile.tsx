@@ -1,6 +1,5 @@
 import * as React from "react";
 
-import { useAuth0 } from "@auth0/auth0-react";
 import {
   Center,
   Container,
@@ -10,6 +9,8 @@ import {
   Stack,
   Text,
 } from "@mantine/core";
+
+import { useAuth0 } from "@auth0/auth0-react";
 
 export default function Profile() {
   const { user } = useAuth0();
