@@ -1,15 +1,20 @@
 package hr.fer.infsus.staem.controller;
 
+import hr.fer.infsus.staem.controller.request.create.CreateArticleRequest;
 import hr.fer.infsus.staem.controller.response.ArticleDetailsResponse;
 import hr.fer.infsus.staem.controller.response.ArticleResponse;
 import hr.fer.infsus.staem.mapper.GenericCreateMapper;
 import hr.fer.infsus.staem.repository.query.FindArticleQuery;
+import hr.fer.infsus.staem.service.ArticleCommandService;
 import hr.fer.infsus.staem.service.ArticleQueryService;
+import hr.fer.infsus.staem.service.command.create.CreateArticleCommand;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,6 +28,8 @@ public class ArticleController {
 
     private final ArticleQueryService articleQueryService;
 
+    private final ArticleCommandService articleCommandService;
+
     private final GenericCreateMapper genericCreateMapper;
 
     @GetMapping
@@ -35,6 +42,14 @@ public class ArticleController {
     @ResponseStatus(value = HttpStatus.OK)
     public ArticleDetailsResponse findById(@PathVariable("id") Long id) {
         return genericCreateMapper.map(articleQueryService.findById(id), ArticleDetailsResponse.class);
+    }
+
+    @PostMapping
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public ArticleDetailsResponse create(@RequestBody @Valid CreateArticleRequest createArticleRequest) {
+        return genericCreateMapper.map(
+            articleCommandService.create(genericCreateMapper.map(createArticleRequest, CreateArticleCommand.class)),
+            ArticleDetailsResponse.class);
     }
 
 }
