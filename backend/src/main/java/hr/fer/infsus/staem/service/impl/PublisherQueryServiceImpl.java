@@ -1,10 +1,12 @@
 package hr.fer.infsus.staem.service.impl;
 
 import hr.fer.infsus.staem.entity.Publisher;
+import hr.fer.infsus.staem.entity.Publisher_;
 import hr.fer.infsus.staem.exception.EntityNotFoundException;
 import hr.fer.infsus.staem.repository.PublisherRepository;
 import hr.fer.infsus.staem.service.PublisherQueryService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,7 +19,7 @@ public class PublisherQueryServiceImpl implements PublisherQueryService {
 
     @Override
     public List<Publisher> findAll() {
-        return publisherRepository.findAll();
+        return publisherRepository.findAll(Sort.by(Publisher_.NAME));
     }
 
     @Override

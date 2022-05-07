@@ -6,7 +6,9 @@ import * as actions from "../ArticleList.actions";
 import { useNavigate } from "react-router-dom";
 import {
   Center,
+  Chip,
   Grid,
+  Group,
   Image,
   Loader,
   Pagination,
@@ -15,6 +17,7 @@ import {
   Text,
 } from "@mantine/core";
 import { ArticleResponse } from "../../../api/types";
+import { currencyMap } from "../../../constants/currency";
 
 export default function ArticleListResult() {
   const dispatch = useAppDispatch();
@@ -83,12 +86,12 @@ function ArticleList() {
                 <Image src={article.pictureUrl} height={125} />
               </Grid.Col>
               <Grid.Col span={6} pl={10} pt={20}>
-                <Text color="gray">{article.title}</Text>
+                <Text>{article.title}</Text>
               </Grid.Col>
               <Grid.Col span={2} pr={20} pt={20}>
-                <Text color="gray" align="right" weight="bold">
-                  {article.price} {article.currency}
-                </Text>
+                <Group position="right">
+                  <PriceDisplay {...article} />
+                </Group>
               </Grid.Col>
             </Grid>
           </Paper>
@@ -104,5 +107,24 @@ function ArticleList() {
         )}
       </Stack>
     </>
+  );
+}
+
+function PriceDisplay({
+  price,
+  currency,
+}: {
+  price: number;
+  currency: string;
+}) {
+  // @ts-ignore
+  const currencySymbol: any = currencyMap[currency];
+
+  return (
+    <Chip>
+      <Text weight="bolder">
+        {price === 0 ? "Free" : `${price} ${currencySymbol}`}
+      </Text>
+    </Chip>
   );
 }

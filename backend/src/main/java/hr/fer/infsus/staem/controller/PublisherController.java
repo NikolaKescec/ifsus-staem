@@ -7,6 +7,7 @@ import hr.fer.infsus.staem.exception.IdMismatchException;
 import hr.fer.infsus.staem.mapper.GenericCreateMapper;
 import hr.fer.infsus.staem.service.PublisherCommandService;
 import hr.fer.infsus.staem.service.PublisherQueryService;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +24,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/publisher")
+@AllArgsConstructor
 public class PublisherController {
 
     private PublisherCommandService publisherCommandService;

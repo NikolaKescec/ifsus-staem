@@ -7,6 +7,7 @@ import hr.fer.infsus.staem.exception.IdMismatchException;
 import hr.fer.infsus.staem.mapper.GenericCreateMapper;
 import hr.fer.infsus.staem.service.GenreCommandService;
 import hr.fer.infsus.staem.service.GenreQueryService;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +24,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/genre")
+@AllArgsConstructor
 public class GenreController {
 
     private GenreCommandService genreCommandService;

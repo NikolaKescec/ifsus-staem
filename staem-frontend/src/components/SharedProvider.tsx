@@ -22,10 +22,10 @@ export default function SharedProvider({
   const publisherStatus = useSelector(registrySelectors.publisherStatus);
 
   React.useEffect(() => {
-    dispatch(registryActions.getCategories);
-    dispatch(registryActions.getDevelopers);
-    dispatch(registryActions.getGenres);
-    dispatch(registryActions.getPublishers);
+    dispatch(registryActions.getCategories());
+    dispatch(registryActions.getDevelopers());
+    dispatch(registryActions.getGenres());
+    dispatch(registryActions.getPublishers());
   }, [dispatch]);
 
   React.useEffect(() => {
@@ -36,18 +36,18 @@ export default function SharedProvider({
     getToken();
   }, [isAuthenticated, getAccessTokenSilently]);
 
-  // if (
-  //   categoryStatus !== "success" ||
-  //   developerStatus !== "success" ||
-  //   genreStatus !== "success" ||
-  //   publisherStatus !== "success"
-  // ) {
-  //   return (
-  //     <Center>
-  //       <LoadingOverlay visible={true} />
-  //     </Center>
-  //   );
-  // }
+  if (
+    categoryStatus !== "success" ||
+    developerStatus !== "success" ||
+    genreStatus !== "success" ||
+    publisherStatus !== "success"
+  ) {
+    return (
+      <Center>
+        <LoadingOverlay visible={true} />
+      </Center>
+    );
+  }
 
   return <>{children}</>;
 }

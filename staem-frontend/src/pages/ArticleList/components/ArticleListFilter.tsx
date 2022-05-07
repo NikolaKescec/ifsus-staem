@@ -20,10 +20,23 @@ import * as actions from "../ArticleList.actions";
 import * as selectors from "../ArticleList.selectors";
 import { useAppDispatch } from "../../../store/store";
 import { Filter, initialFilterState } from "../ArticleList.slice";
+import * as registrySelectors from "../../../store/shared/registry.selectors";
 
 export default function ArticleListFilter() {
   const dispatch = useAppDispatch();
+
   const filter = useSelector(selectors.filter);
+  const categories = useSelector(registrySelectors.categories);
+  const developers = useSelector(registrySelectors.developers);
+  const genres = useSelector(registrySelectors.genres);
+  const publishers = useSelector(registrySelectors.publishers);
+
+  const mapDataToSelectItems = (data: { id: number; name: string }[]) => {
+    return data.map((item) => ({
+      value: item.id.toString(),
+      label: item.name,
+    }));
+  };
 
   const form = useForm({
     initialValues: filter,
@@ -48,28 +61,36 @@ export default function ArticleListFilter() {
           <Grid.Col span={4}>
             <Select
               label="Genre"
-              data={["All", "Published", "Draft"]}
+              clearable={true}
+              data={mapDataToSelectItems(genres)}
+              searchable={true}
               {...form.getInputProps("genreId")}
             />
           </Grid.Col>
           <Grid.Col span={4}>
             <Select
               label="Category"
-              data={["All", "Published", "Draft"]}
+              clearable={true}
+              data={mapDataToSelectItems(categories)}
+              searchable={true}
               {...form.getInputProps("categoryId")}
             />
           </Grid.Col>
           <Grid.Col span={4}>
             <Select
               label="Publisher"
-              data={["All", "Published", "Draft"]}
+              clearable={true}
+              data={mapDataToSelectItems(publishers)}
+              searchable={true}
               {...form.getInputProps("publisherId")}
             />
           </Grid.Col>
           <Grid.Col span={4}>
             <Select
               label="Developer"
-              data={["All", "Published", "Draft"]}
+              clearable={true}
+              data={mapDataToSelectItems(developers)}
+              searchable={true}
               {...form.getInputProps("developerId")}
             />
           </Grid.Col>
