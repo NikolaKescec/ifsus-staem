@@ -31,9 +31,10 @@ export function getBearerToken(): HeadersInit {
   if (token) {
     return {
       Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
     };
   } else {
-    return {};
+    return { "Content-Type": "application/json" };
   }
 }
 

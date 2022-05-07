@@ -22,6 +22,7 @@ import { showNotification } from "@mantine/notifications";
 
 import * as api from "../../api/developers";
 import { DeveloperResponse } from "../../api/types";
+import CreateNewCatalogEntry from "../../components/CreateNewCatalogEntry";
 import * as actions from "../../store/shared/developer.actions";
 import * as selectors from "../../store/shared/developer.selectors";
 import { useAppDispatch } from "../../store/store";
@@ -78,7 +79,12 @@ export default function CategoryList() {
 
   return (
     <Container size="md">
-      <Paper p={10}>
+      <CreateNewCatalogEntry
+        title="developer"
+        createFunction={api.create}
+        dispatchAction={actions.findAll}
+      />
+      <Paper p={10} my={20}>
         <Table
           verticalSpacing="sm"
           horizontalSpacing="md"

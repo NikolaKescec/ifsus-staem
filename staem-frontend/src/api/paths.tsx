@@ -15,21 +15,29 @@ export const articles = {
 };
 
 export const categories = {
-  getAll: api.categories,
+  findAll: api.categories,
+  create: api.categories,
   delete: (id: number) => `${api.categories}/${id}`,
+  update: (id: number) => `${api.categories}/${id}`,
 };
 
 export const developers = {
-  getAll: api.developers,
+  findAll: api.developers,
+  create: api.developers,
   delete: (id: number) => `${api.developers}/${id}`,
+  update: (id: number) => `${api.developers}/${id}`,
 };
 
 export const genres = {
-  getAll: api.genres,
+  findAll: api.genres,
+  create: api.genres,
   delete: (id: number) => `${api.genres}/${id}`,
+  update: (id: number) => `${api.genres}/${id}`,
 };
 
 export const publishers = {
-  getAll: api.publishers,
+  findAll: api.publishers,
+  create: api.publishers,
   delete: (id: number) => `${api.publishers}/${id}`,
+  update: (id: number) => `${api.publishers}/${id}`,
 };

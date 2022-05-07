@@ -43,7 +43,8 @@ public class DeveloperController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public DeveloperResponse create(@RequestBody @Valid CreateDeveloperRequest createDeveloperRequest) {
-        return genericCreateMapper.map(createDeveloperRequest.getName(), DeveloperResponse.class);
+        return genericCreateMapper.map(developerCommandService.create(createDeveloperRequest.getName()),
+            DeveloperResponse.class);
     }
 
     @PutMapping("/{id}")
