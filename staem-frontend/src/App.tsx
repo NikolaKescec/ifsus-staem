@@ -1,13 +1,16 @@
+import React from "react";
+
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 
+import { AppShell, MantineProvider } from "@mantine/core";
+
 import { Auth0Provider } from "@auth0/auth0-react";
-import cx from "classnames";
 
 import AppRoutes from "./AppRoutes";
-import Navbar from "./components/Navbar";
-import { ThemeProvider, useThemeContext } from "./context/ThemeContext";
+import MyNavbar from "./components/MyNavbar";
 import store from "./store/store";
+import SharedProvider from "./components/SharedProvider";
 
 export default function App() {
   return (
@@ -27,28 +30,38 @@ export default function App() {
 
 function UiProvider() {
   return (
-    <ThemeProvider>
+    <MantineProvider theme={{ colorScheme: "dark" }}>
       <BrowserRouter>
         <AppLayout />
       </BrowserRouter>
-    </ThemeProvider>
+    </MantineProvider>
   );
 }
 
 function AppLayout() {
-  const { body } = useThemeContext();
-
-  const bodyClassName = cx({
-    [body]: true,
-    "flex flex-col h-screen": true,
-  });
-
   return (
-    <div className={bodyClassName}>
-      <Navbar />
-      <main className="flex-grow p-2">
+    <AppShell
+      padding="md"
+      fixed={true}
+      header={<MyNavbar />}
+      style={{ display: "flex", flexDirection: "column", height: "100%" }}
+      styles={(theme) => ({
+        body: {
+          display: "flex",
+          flexDirection: "column",
+        },
+        main: {
+          flexGrow: 3,
+          backgroundColor:
+            theme.colorScheme === "dark"
+              ? theme.colors.dark[8]
+              : theme.colors.gray[0],
+        },
+      })}
+    >
+      <SharedProvider>
         <AppRoutes />
-      </main>
-    </div>
+      </SharedProvider>
+    </AppShell>
   );
 }

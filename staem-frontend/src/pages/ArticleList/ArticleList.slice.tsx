@@ -1,10 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-import { ArticleResponse, FindArticlesQuery, Status } from "../../api/types";
+import { ArticleResponse, ArticlesFilter, Status } from "../../api/types";
 import * as actions from "./ArticleList.actions";
 import { StateWithStatus } from "../../store/types";
 
-type Filter = FindArticlesQuery;
+export type Filter = ArticlesFilter;
 
 type Result = ArticleResponse[];
 
@@ -12,18 +12,27 @@ export type State = StateWithStatus<Result> & {
   page: {
     pageNumber: number;
     pageSize: number;
-    totalElements: number;
+    totalPages: number;
   };
   filter: Filter;
 };
+
+export const initialFilterState = {
+  title: "",
+  genreId: "",
+  categoryId: "",
+  developerId: "",
+  publisherId: "",
+  priceRange: [0, 100],
+} as Filter;
 
 const initialState = {
   page: {
     pageNumber: 0,
     pageSize: 10,
-    totalElements: 0,
+    totalPages: 0,
   },
-  filter: {},
+  filter: initialFilterState,
   status: "idle" as Status,
 } as State;
 
@@ -54,7 +63,7 @@ const articleListSlice = createSlice({
         state.page = {
           pageNumber: action.payload.pageable.pageNumber,
           pageSize: action.payload.pageable.pageSize,
-          totalElements: action.payload.totalElements,
+          totalPages: action.payload.totalPages,
         };
       });
   },

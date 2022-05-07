@@ -1,20 +1,14 @@
-import axios from "axios";
-
 import * as paths from "./paths";
 import { ArticleResponse, FindArticlesQuery, Page } from "./types";
-import { createBearerHeader } from "./util";
+import { getBearerToken } from "./util";
 
-// GET /articles/:query
+// GET /article/:query
 export async function findAll(
-  query: FindArticlesQuery,
-  token?: string
+  query: FindArticlesQuery
 ): Promise<Page<ArticleResponse>> {
-  console.log(token);
+  const response = await fetch(paths.articles.findAll(query), {
+    headers: getBearerToken(),
+  });
 
-  const response = await axios.get<Page<ArticleResponse>>(
-    paths.articles.findAll(query),
-    createBearerHeader(token)
-  );
-
-  return response.data;
+  return response.json();
 }

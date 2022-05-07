@@ -9,3 +9,13 @@ spring:
     username: ${DB_USERNAME:sa}
     password: ${DB_PASSWORD:}
     url: ${DB_URL:jdbc:h2:mem:testdb}
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jws-algorithm: RS256
+          issuer-uri: ${AUTH0_DOMAIN:https://sbolsec.eu.auth0.com/}
+
+auth0:
+  audience: ${AUTH0_IDENTIFIER:http://localhost:8080/}
