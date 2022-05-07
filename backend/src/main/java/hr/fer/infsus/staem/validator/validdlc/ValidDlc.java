@@ -1,4 +1,4 @@
-package hr.fer.infsus.staem.validator.entityexists;
+package hr.fer.infsus.staem.validator.validdlc;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -8,15 +8,13 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target({ ElementType.FIELD, ElementType.TYPE_USE })
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = EntityExistsValidator.class)
+@Constraint(validatedBy = ValidDlcValidator.class)
 @Documented
-public @interface EntityExists {
+public @interface ValidDlc {
 
-    String message() default "Entity does not exist";
-
-    Class<?> repository();
+    String message() default "Invalid article!";
 
     Class<?>[] groups() default {};
 

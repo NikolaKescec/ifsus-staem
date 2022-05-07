@@ -7,6 +7,8 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -52,8 +54,8 @@ public class Article {
 
     private LocalDate releaseDate;
 
-    @Column(length = 10)
-    private String articleType;
+    @Enumerated(EnumType.STRING)
+    private ArticleType articleType;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "id_base_article", foreignKey = @ForeignKey(name = "id_base_article"))
@@ -83,7 +85,7 @@ public class Article {
         inverseJoinColumns = { @JoinColumn(name = "id_genre", nullable = false) })
     private Set<Genre> genres;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "id_article", foreignKey = @ForeignKey(name = "id_article"), nullable = false)
     private List<Picture> pictures;
 
@@ -199,7 +201,7 @@ public class Article {
         }
     }
 
-    public void setGenres(List<Genre> genres) {
+    public void setGenres(Set<Genre> genres) {
         if (this.genres == null) {
             this.genres = new LinkedHashSet<>(genres);
         } else {
