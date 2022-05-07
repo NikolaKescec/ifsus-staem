@@ -1,41 +1,35 @@
 import React from "react";
 
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 
 import {
   ActionIcon,
-  Button,
   Center,
   Container,
   Group,
-  Mark,
-  Modal,
   Pagination,
   Paper,
   Table,
-  Text,
 } from "@mantine/core";
 import { usePagination } from "@mantine/hooks";
-import { IconCheck, IconCircleX, IconPencil, IconTrash } from "@tabler/icons";
-import { showNotification } from "@mantine/notifications";
+import { IconPencil, IconTrash } from "@tabler/icons";
 
 import * as api from "../../api/genres";
-import { DeveloperResponse, GenreResponse } from "../../api/types";
+import { GenreResponse } from "../../api/types";
 import CreateNewCatalogEntry from "../../components/CreateNewCatalogEntry";
 import * as actions from "../../store/shared/genre.actions";
 import * as selectors from "../../store/shared/genre.selectors";
-import { useAppDispatch } from "../../store/store";
+import UpdateCatalogEntryModal from "../../components/UpdateCatalogEntryModal";
+import DeleteCatalogEntryModal from "../../components/DeleteCatalogEntryModal";
 
 export default function CategoryList() {
-  const navigate = useNavigate();
-  const dispatch = useAppDispatch();
-
   const result = useSelector(selectors.result);
 
-  const [genreToDelete, setGenreToDelete] =
-    React.useState<GenreResponse | null>(null);
-  const [modalOpen, setModalOpen] = React.useState(false);
+  const [modalGenre, setModalGenre] = React.useState<GenreResponse | null>(
+    null
+  );
+  const [deleteModal, setDeleteModal] = React.useState(false);
+  const [updateModal, setUpdateModal] = React.useState(false);
 
   const pageSize = 10;
   const totalPages = Math.ceil(result.length / pageSize);
@@ -48,33 +42,14 @@ export default function CategoryList() {
 
   const genres = [...result].sort((a, b) => (a.id < b.id ? -1 : 1));
 
-  const handleDelete = (developer: DeveloperResponse) => {
-    setGenreToDelete(developer);
-    setModalOpen(true);
+  const handleDelete = (genre: GenreResponse) => {
+    setModalGenre(genre);
+    setDeleteModal(true);
   };
 
-  const onDelete = async () => {
-    setModalOpen(false);
-
-    try {
-      await api.deleteGenre(genreToDelete!.id);
-
-      showNotification({
-        title: "Success",
-        message: "Genre deleted successfully",
-        color: "green",
-        icon: <IconCheck />,
-      });
-
-      dispatch(actions.findAll());
-    } catch (error) {
-      showNotification({
-        title: "Error",
-        message: "An error occurred while deleting the genre",
-        color: "red",
-        icon: <IconCircleX />,
-      });
-    }
+  const handleUpdate = (genre: GenreResponse) => {
+    setModalGenre(genre);
+    setUpdateModal(true);
   };
 
   return (
@@ -108,9 +83,7 @@ export default function CategoryList() {
                     <td>{genre.name}</td>
                     <td>
                       <Group position="center">
-                        <ActionIcon
-                          onClick={() => navigate(`/genres/${genre.id}/update`)}
-                        >
+                        <ActionIcon onClick={() => handleUpdate(genre)}>
                           <IconPencil color="yellow" />
                         </ActionIcon>
                         <ActionIcon onClick={() => handleDelete(genre)}>
@@ -126,26 +99,27 @@ export default function CategoryList() {
         </Table>
       </Paper>
 
-      <Modal
-        opened={modalOpen}
-        onClose={() => setModalOpen(false)}
-        title="Delete Category"
-      >
-        <Text>
-          Are you sure you want to delete{" "}
-          <Mark color="gray" px={5} py={2}>
-            {genreToDelete?.name}
-          </Mark>
-        </Text>
-        <Group position="right" py={20}>
-          <Button color="blue" onClick={() => setModalOpen(false)}>
-            Close
-          </Button>
-          <Button color="red" onClick={onDelete}>
-            Delete
-          </Button>
-        </Group>
-      </Modal>
+      {updateModal && modalGenre && (
+        <UpdateCatalogEntryModal
+          title="Update Category"
+          modalOpen={updateModal}
+          setModalOpen={setUpdateModal}
+          item={modalGenre}
+          updateFunction={api.update}
+          dispatchAction={actions.findAll}
+        />
+      )}
+
+      {updateModal && modalGenre && (
+        <DeleteCatalogEntryModal
+          title="genre"
+          modalOpen={deleteModal}
+          setModalOpen={setDeleteModal}
+          item={modalGenre}
+          deleteFunction={api.deleteGenre}
+          dispatchAction={actions.findAll}
+        />
+      )}
 
       <Center my={20}>
         <Pagination

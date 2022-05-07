@@ -1,5 +1,9 @@
 import * as paths from "./paths";
-import { PublisherResponse, ValidationError } from "./types";
+import {
+  PublisherResponse,
+  UpdateCatalogValues,
+  ValidationError,
+} from "./types";
 import { getBearerToken, transformErrors } from "./util";
 
 // GET /publisher
@@ -17,6 +21,20 @@ export async function create(name: string): Promise<void> {
     method: "POST",
     headers: getBearerToken(),
     body: JSON.stringify({ name }),
+  });
+
+  if (response.status === 400) {
+    const data = await response.json();
+    throw new ValidationError(transformErrors(data));
+  }
+}
+
+// PUT /publisher/:id
+export async function update(values: UpdateCatalogValues): Promise<void> {
+  const response = await fetch(paths.publishers.update(values.id), {
+    method: "PUT",
+    headers: getBearerToken(),
+    body: JSON.stringify(values),
   });
 
   if (response.status === 400) {

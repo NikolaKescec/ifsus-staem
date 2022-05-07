@@ -100,3 +100,8 @@ export type PriceRange = {
   minPrice: number;
   maxPrice: number;
 };
+
+export type UpdateCatalogValues = {
+  id: number;
+  name: string;
+};

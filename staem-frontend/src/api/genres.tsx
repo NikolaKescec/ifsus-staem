@@ -1,5 +1,5 @@
 import * as paths from "./paths";
-import { GenreResponse, ValidationError } from "./types";
+import { GenreResponse, UpdateCatalogValues, ValidationError } from "./types";
 import { getBearerToken, transformErrors } from "./util";
 
 // GET /genre
@@ -17,6 +17,20 @@ export async function create(name: string): Promise<void> {
     method: "POST",
     headers: getBearerToken(),
     body: JSON.stringify({ name }),
+  });
+
+  if (response.status === 400) {
+    const data = await response.json();
+    throw new ValidationError(transformErrors(data));
+  }
+}
+
+// PUT /genre/:id
+export async function update(values: UpdateCatalogValues): Promise<void> {
+  const response = await fetch(paths.genres.update(values.id), {
+    method: "PUT",
+    headers: getBearerToken(),
+    body: JSON.stringify(values),
   });
 
   if (response.status === 400) {
