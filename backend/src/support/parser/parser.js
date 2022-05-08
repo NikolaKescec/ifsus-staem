@@ -2,6 +2,7 @@ const apps = require('./apps');
 const axios = require("axios");
 
 const limit = apps.length
+const timeout = 90000;
 
 const monthMap = {
   "Jan": 1,
@@ -29,10 +30,14 @@ function escapeString(s) {
   return s.replace(/'/g, "''");
 }
 
+function getIndex(array, item) {
+  return array.indexOf(item) + 1;
+}
+
 
 const main = async () => {
   const developers = [], publishers = [], categories = [], genres = [], articles = [], pictures = [], articleDev = [],
-    articlePub = [], articleCat = [], articleGen = [], availableArticles = new Set();
+    articlePub = [], articleCat = [], articleGen = [], availableArticles = [];
   let count = 0;
 
   async function retrieveAndSaveDetails(appId) {
@@ -44,29 +49,29 @@ const main = async () => {
     let details;
     try {
       if (count !== 0 && count % 60 === 0) {
-        console.error(`${count} divisible by 60, waiting for 30 seconds!`);
-        await new Promise(resolve => setTimeout(resolve, 30000));
+        console.error(`${count} divisible by 60, waiting for ${timeout / 1000} seconds!`);
+        await new Promise(resolve => setTimeout(resolve, timeout));
       }
-      count++
+      count++;
       details = (await axios.get(`https://store.steampowered.com/api/appdetails?appids=${appId}`)).data[appId].data;
 
       if (!details) return;
       if (!details.name || details.name.toLowerCase().includes("test") || details.name.toLowerCase().includes("demo")) return;
 
-      if (availableArticles.has(appId)) {
+      if (availableArticles.includes(appId)) {
         console.error(`${appId} already exists`);
         return;
       }
-      availableArticles.add(appId)
 
       const type = details.type?.toUpperCase() ?? "GAME";
       if (type === "DEMO" || type === "MUSIC") return;
 
-      const baseArticle = type === "DLC" ? details.fullgame.appid : "NULL";
-      if (baseArticle !== "NULL" && !availableArticles.has(baseArticle)) {
+      const baseArticle = type === "DLC" ? getIndex(availableArticles, details.fullgame.appid) : "NULL";
+      if (baseArticle !== "NULL" && baseArticle === 0) {
         console.error(`${count}/${limit}`, `Base article ${baseArticle} not available`);
         return;
       }
+      availableArticles.push(appId);
 
       let addedSet = new Set()
       if (details.developers) {
@@ -76,7 +81,7 @@ const main = async () => {
         }
         for (let x of details.developers) {
           if (addedSet.has(x)) continue;
-          articleDev.push([appId, developers.indexOf(x)]);
+          articleDev.push([getIndex(availableArticles, appId), getIndex(developers, x)]);
           addedSet.add(x);
         }
       }
@@ -89,7 +94,7 @@ const main = async () => {
         }
         for (let x of details.publishers) {
           if (addedSet.has(x)) continue;
-          articlePub.push([appId, publishers.indexOf(x)]);
+          articlePub.push([getIndex(availableArticles, appId), getIndex(publishers, x)]);
           addedSet.add(x);
         }
       }
@@ -102,7 +107,7 @@ const main = async () => {
         }
         for (let x of details.categories) {
           if (addedSet.has(x.description)) continue;
-          articleCat.push([appId, categories.indexOf(x.description)]);
+          articleCat.push([getIndex(availableArticles, appId), getIndex(categories, x.description)]);
           addedSet.add(x.description);
         }
       }
@@ -116,16 +121,16 @@ const main = async () => {
         let addedSet = new Set()
         for (let x of details.genres) {
           if (addedSet.has(x.description)) continue;
-          articleGen.push([appId, genres.indexOf(x.description)]);
+          articleGen.push([getIndex(availableArticles, appId), getIndex(genres, x.description)]);
           addedSet.add(x.description);
         }
       }
 
-      articles.push(`INSERT INTO Article (id, title, description, price, currency, picture_url, release_date, article_type, id_base_article) VALUES (${appId}, '${escapeString(details.name)}', '${escapeString(details.detailed_description)}', ${(details.price_overview?.initial ?? 0) / 100}, '${details.price_overview?.currency ?? "EUR"}', '${details.header_image}', ${convertDate(details.release_date.date)}, '${type}', ${baseArticle});`);
+      articles.push(`INSERT INTO Article (title, description, price, currency, picture_url, release_date, article_type, id_base_article) VALUES ('${escapeString(details.name)}', '${escapeString(details.detailed_description)}', ${(details.price_overview?.initial ?? 0) / 100}, '${details.price_overview?.currency ?? "EUR"}', '${details.header_image}', ${convertDate(details.release_date.date)}, '${type}', ${baseArticle});`);
 
       if (details.screenshots) {
         for (x of details.screenshots) {
-          pictures.push({id: pictureId++, full: x.path_full, thumb: x.path_thumbnail, appid: appId});
+          pictures.push({full: x.path_full, thumb: x.path_thumbnail, appid: getIndex(availableArticles, appId)});
         }
       }
 
@@ -141,16 +146,15 @@ const main = async () => {
           dlcCount++;
         }
       }
-      console.error(`${count}/${limit}`, `${appId} - ${details.name} ready to include! (${type})`);
+      console.error(`${count}/${limit}`, `appId = ${appId}|order = ${getIndex(availableArticles, appId)} - ${details.name} ready to include! (${type === "DLC" ? "DLC, base game " + baseArticle : type})`);
     } catch (error) {
       console.error(error, appId)
     }
   }
 
-  let pictureId = 1;
   for (let app of apps) {
     try {
-      await retrieveAndSaveDetails(app)
+      await retrieveAndSaveDetails(app);
 
       if (count === limit) break;
     } catch (error) {
@@ -161,16 +165,16 @@ const main = async () => {
 
   try {
     console.log("-- DEVELOPERS");
-    developers.forEach((name, i) => console.log(`INSERT INTO developer (id, name) VALUES (${i}, '${escapeString(name)}');`));
+    developers.forEach((name) => console.log(`INSERT INTO developer (name) VALUES ('${escapeString(name)}');`));
 
     console.log("\n-- PUBLISHERS");
-    publishers.forEach((name, i) => console.log(`INSERT INTO publisher (id, name) VALUES (${i}, '${escapeString(name)}');`));
+    publishers.forEach((name) => console.log(`INSERT INTO publisher (name) VALUES ('${escapeString(name)}');`));
 
     console.log("\n-- CATEGORIES");
-    categories.forEach((name, i) => console.log(`INSERT INTO category (id, name) VALUES (${i}, '${escapeString(name)}');`));
+    categories.forEach((name) => console.log(`INSERT INTO category (name) VALUES ('${escapeString(name)}');`));
 
     console.log("\n-- GENRES");
-    genres.forEach((name, i) => console.log(`INSERT INTO genre (id, name) VALUES (${i}, '${escapeString(name)}');`));
+    genres.forEach((name) => console.log(`INSERT INTO genre (name) VALUES ('${escapeString(name)}');`));
 
     console.log("\n-- ARTICLES")
     articles.forEach(x => console.log(x));
@@ -188,7 +192,7 @@ const main = async () => {
     articleGen.forEach(x => console.log(`INSERT INTO article_genre (id_article, id_genre) VALUES (${x[0]}, ${x[1]});`));
 
     console.log("\n-- PICTURES")
-    pictures.forEach(x => console.log(`INSERT INTO Picture (id, url_full, url_thumbnail, id_article) VALUES (${x.id}, '${x.full}', '${x.thumb}', ${x.appid});`));
+    pictures.forEach(x => console.log(`INSERT INTO Picture (url_full, url_thumbnail, id_article) VALUES ('${x.full}', '${x.thumb}', ${x.appid});`));
   } catch (error) {
     console.error(error)
   }

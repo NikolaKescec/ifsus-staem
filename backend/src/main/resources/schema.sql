@@ -2,35 +2,35 @@
 
 CREATE TABLE Category
 (
-  id BIGINT NOT NULL,
+  id BIGSERIAL NOT NULL,
   name VARCHAR(255) NOT NULL,
   PRIMARY KEY (id)
 );
 
 CREATE TABLE Genre
 (
-  id BIGINT NOT NULL,
+  id BIGSERIAL NOT NULL,
   name VARCHAR(255) NOT NULL,
   PRIMARY KEY (id)
 );
 
 CREATE TABLE Developer
 (
-  id BIGINT NOT NULL,
+  id BIGSERIAL NOT NULL,
   name VARCHAR(255) NOT NULL,
   PRIMARY KEY (id)
 );
 
 CREATE TABLE Publisher
 (
-  id BIGINT NOT NULL,
+  id BIGSERIAL NOT NULL,
   name VARCHAR(255) NOT NULL,
   PRIMARY KEY (id)
 );
 
 CREATE TABLE Article
 (
-  id BIGINT NOT NULL,
+  id BIGSERIAL NOT NULL,
   title VARCHAR(255) NOT NULL,
   description TEXT NOT NULL,
   price DECIMAL NOT NULL,
@@ -45,7 +45,7 @@ CREATE TABLE Article
 
 CREATE TABLE Picture
 (
-  id BIGINT NOT NULL,
+  id BIGSERIAL NOT NULL,
   url_full TEXT NOT NULL,
   url_thumbnail TEXT NOT NULL,
   id_article BIGINT NOT NULL,
