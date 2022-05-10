@@ -12,6 +12,7 @@ const api = {
 
 export const articles = {
   findAll: (query: any) => `${api.articles}/?${createQuery(query)}`,
+  findById: (id: number) => `${api.articles}/${id}`,
 };
 
 export const categories = {

@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router-dom";
 
 import PrivateRoute from "./components/PrivateRoute";
 import ArticleList from "./pages/ArticleList/ArticleList";
+import ArticleDetails from "./pages/ArticleDetails/ArticleDetails";
 import CategoryList from "./pages/CategoryList/CategoryList";
 import DeveloperList from "./pages/DeveloperList/DeveloperList";
 import GenreList from "./pages/GenreList/GenreList";
@@ -14,6 +15,7 @@ export default function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<ArticleList />} />
+      <Route path="/article/:id" element={<ArticleDetails />} />
       <Route element={<PrivateRoute />}>
         <Route path="/my-games" element={<MyGames />} />
         <Route path="/profile" element={<Profile />} />
