@@ -18,12 +18,12 @@ import { IconFilter, IconFilterOff } from "@tabler/icons";
 
 import * as actions from "../ArticleList.actions";
 import * as selectors from "../ArticleList.selectors";
-import { useAppDispatch } from "../../../store/store";
 import { Filter, initialFilterState } from "../ArticleList.slice";
 import * as categorySelectors from "../../../store/shared/category.selectors";
 import * as developerSelectors from "../../../store/shared/developer.selectors";
 import * as genreSelectors from "../../../store/shared/genre.selectors";
 import * as publisherSelectors from "../../../store/shared/publisher.selectors";
+import { useAppDispatch } from "../../../store/store";
 
 export default function ArticleListFilter() {
   const dispatch = useAppDispatch();

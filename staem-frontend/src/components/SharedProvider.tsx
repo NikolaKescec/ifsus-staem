@@ -21,6 +21,7 @@ export default function SharedProvider({
 }: React.PropsWithChildren<{}>) {
   const dispatch = useAppDispatch();
   const { isAuthenticated, getAccessTokenSilently } = useAuth0();
+  const [fetchedToken, setFetchedToken] = React.useState<string | null>(null);
 
   const categoryStatus = useSelector(categorySelectors.status);
   const developerStatus = useSelector(developerSelectors.status);
@@ -28,19 +29,25 @@ export default function SharedProvider({
   const publisherStatus = useSelector(publisherSelectors.status);
 
   React.useEffect(() => {
+    const getToken = async () => {
+      const token = await getAccessTokenSilently();
+      localStorage.setItem("access_token", token);
+      setFetchedToken(token);
+    };
+
+    if (isAuthenticated) {
+      getToken();
+    } else {
+      localStorage.removeItem("access_token");
+    }
+  }, [isAuthenticated, getAccessTokenSilently]);
+
+  React.useEffect(() => {
     dispatch(categoryActions.findAll());
     dispatch(developerActions.findAll());
     dispatch(genreActions.findAll());
     dispatch(publisherActions.findAll());
-  }, [dispatch]);
-
-  React.useEffect(() => {
-    const getToken = async () => {
-      const token = await getAccessTokenSilently();
-      localStorage.setItem("access_token", token);
-    };
-    getToken();
-  }, [isAuthenticated, getAccessTokenSilently]);
+  }, [dispatch, fetchedToken]);
 
   if (
     categoryStatus !== "success" ||
