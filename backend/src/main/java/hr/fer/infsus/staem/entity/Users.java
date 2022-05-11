@@ -3,6 +3,7 @@ package hr.fer.infsus.staem.entity;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.Id;
@@ -22,5 +23,8 @@ public class Users {
     @ManyToOne
     @JoinColumn(name = "id_role", foreignKey = @ForeignKey(name = "id_role"))
     private Role role;
+
+    @Column(name = "is_deleted", nullable = false)
+    private Boolean isDeleted;
 
 }

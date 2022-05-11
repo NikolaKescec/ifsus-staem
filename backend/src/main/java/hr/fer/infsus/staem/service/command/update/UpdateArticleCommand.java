@@ -1,4 +1,4 @@
-package hr.fer.infsus.staem.service.command.create;
+package hr.fer.infsus.staem.service.command.update;
 
 import hr.fer.infsus.staem.entity.ArticleType;
 import hr.fer.infsus.staem.service.command.shared.PictureCommand;
@@ -11,7 +11,9 @@ import java.util.List;
 
 @Getter
 @Setter
-public class CreateArticleCommand {
+public class UpdateArticleCommand {
+
+    private Long id;
 
     private String title;
 

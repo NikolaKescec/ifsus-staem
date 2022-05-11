@@ -1,7 +1,8 @@
-package hr.fer.infsus.staem.controller.request.create;
+package hr.fer.infsus.staem.controller.request.update;
 
 import hr.fer.infsus.staem.controller.request.shared.PictureRequest;
 import hr.fer.infsus.staem.entity.ArticleType;
+import hr.fer.infsus.staem.repository.ArticleRepository;
 import hr.fer.infsus.staem.repository.CategoryRepository;
 import hr.fer.infsus.staem.repository.DeveloperRepository;
 import hr.fer.infsus.staem.repository.GenreRepository;
@@ -25,7 +26,10 @@ import java.util.List;
 @Getter
 @Setter
 @ValidDlc
-public class CreateArticleRequest implements ValidDlcFields {
+public class UpdateArticleRequest implements ValidDlcFields {
+
+    @EntityExists(repository = ArticleRepository.class, message = "Article with id {value} does not exist")
+    private Long id;
 
     @NotEmpty(message = "Title is required")
     private String title;

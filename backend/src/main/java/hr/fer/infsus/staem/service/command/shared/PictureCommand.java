@@ -1,11 +1,11 @@
-package hr.fer.infsus.staem.service.command.create;
+package hr.fer.infsus.staem.service.command.shared;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class CreatePictureCommand {
+public class PictureCommand {
 
     private String urlFull;
 

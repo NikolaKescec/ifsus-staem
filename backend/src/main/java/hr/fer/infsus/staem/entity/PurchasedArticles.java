@@ -4,6 +4,7 @@ import hr.fer.infsus.staem.entity.composite.PurchasedArticlesId;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.Id;
@@ -34,5 +35,8 @@ public class PurchasedArticles {
     private LocalDate dateOfPurchase;
 
     private BigDecimal price;
+
+    @Column(name = "is_deleted", nullable = false)
+    private Boolean isDeleted;
 
 }

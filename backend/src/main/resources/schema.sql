@@ -4,6 +4,7 @@ CREATE TABLE Category
 (
   id BIGSERIAL NOT NULL,
   name VARCHAR(255) NOT NULL,
+  is_deleted BOOLEAN NOT NULL DEFAULT false,
   PRIMARY KEY (id)
 );
 
@@ -11,6 +12,7 @@ CREATE TABLE Genre
 (
   id BIGSERIAL NOT NULL,
   name VARCHAR(255) NOT NULL,
+  is_deleted BOOLEAN NOT NULL DEFAULT false,
   PRIMARY KEY (id)
 );
 
@@ -18,6 +20,7 @@ CREATE TABLE Developer
 (
   id BIGSERIAL NOT NULL,
   name VARCHAR(255) NOT NULL,
+  is_deleted BOOLEAN NOT NULL DEFAULT false,
   PRIMARY KEY (id)
 );
 
@@ -25,6 +28,7 @@ CREATE TABLE Publisher
 (
   id BIGSERIAL NOT NULL,
   name VARCHAR(255) NOT NULL,
+  is_deleted BOOLEAN NOT NULL DEFAULT false,
   PRIMARY KEY (id)
 );
 
@@ -39,6 +43,7 @@ CREATE TABLE Article
   release_date DATE NOT NULL,
   article_type VARCHAR(10) NOT NULL,
   id_base_article BIGINT,
+  is_deleted BOOLEAN NOT NULL DEFAULT false,
   PRIMARY KEY (id),
   FOREIGN KEY (id_base_article) REFERENCES Article(id)
 );
@@ -49,6 +54,7 @@ CREATE TABLE Picture
   url_full TEXT NOT NULL,
   url_thumbnail TEXT NOT NULL,
   id_article BIGINT NOT NULL,
+  is_deleted BOOLEAN NOT NULL DEFAULT false,
   PRIMARY KEY (id),
   FOREIGN KEY (id_article) REFERENCES Article(id)
 );
@@ -93,6 +99,7 @@ CREATE TABLE Role
 (
   id BIGSERIAL NOT NULL,
   name VARCHAR(50) NOT NULL,
+  is_deleted BOOLEAN NOT NULL DEFAULT false,
   PRIMARY KEY (id)
 );
 
@@ -100,6 +107,7 @@ CREATE TABLE Users
 (
   id VARCHAR(255) NOT NULL,
   id_role BIGINT NOT NULL,
+  is_deleted BOOLEAN NOT NULL DEFAULT false,
   PRIMARY KEY (id),
   FOREIGN KEY (id_role) REFERENCES Role(id)
 );

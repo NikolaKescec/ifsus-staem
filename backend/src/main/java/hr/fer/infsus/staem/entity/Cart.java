@@ -3,6 +3,7 @@ package hr.fer.infsus.staem.entity;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
@@ -16,7 +17,10 @@ import javax.persistence.Table;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "cart")
@@ -38,19 +42,19 @@ public class Cart {
     @JoinTable(name = "article_cart",
         joinColumns = { @JoinColumn(name = "id_cart", nullable = false) },
         inverseJoinColumns = { @JoinColumn(name = "id_article", nullable = false) })
-    private List<Article> articles;
+    private Set<Article> articles;
 
-    public List<Article> getArticles() {
+    public Set<Article> getArticles() {
         if (articles == null) {
-            return Collections.emptyList();
+            return Collections.emptySet();
         } else {
-            return new ArrayList<>(articles);
+            return new LinkedHashSet<>(articles);
         }
     }
 
-    public void setArticles(List<Article> articles) {
+    public void setArticles(Set<Article> articles) {
         if (this.articles == null) {
-            this.articles = new ArrayList<>(articles);
+            this.articles = new LinkedHashSet<>(articles);
         } else {
             this.articles.clear();
             this.articles.addAll(articles);

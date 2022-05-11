@@ -89,41 +89,8 @@ public class Article {
     @JoinColumn(name = "id_article", foreignKey = @ForeignKey(name = "id_article"), nullable = false)
     private List<Picture> pictures;
 
-    public void addPublisher(Publisher publisher) {
-        this.publishers.add(publisher);
-        publisher.getArticles().add(this);
-    }
-
-    public void removePublisher(Publisher publisher) {
-        this.publishers.remove(publisher);
-    }
-
-    public void addDeveloper(Developer developer) {
-        this.developers.add(developer);
-        developer.getArticles().add(this);
-    }
-
-    public void removeDeveloper(Developer developer) {
-        this.developers.remove(developer);
-    }
-
-    public void addCategory(Category category) {
-        this.categories.add(category);
-        category.getArticles().add(this);
-    }
-
-    public void removeCategory(Category category) {
-        this.categories.remove(category);
-    }
-
-    public void addGenre(Genre genre) {
-        this.genres.add(genre);
-        genre.getArticles().add(this);
-    }
-
-    public void removeGenre(Genre genre) {
-        this.genres.remove(genre);
-    }
+    @Column(name = "is_deleted", nullable = false)
+    private Boolean isDeleted;
 
     public List<Article> getDlcs() {
         if (dlcs == null) {

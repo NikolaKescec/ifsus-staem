@@ -2,8 +2,8 @@ package hr.fer.infsus.staem.entity;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.GenericGenerator;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -27,8 +27,12 @@ public class Category {
     @ManyToMany(mappedBy = "categories")
     private Set<Article> articles;
 
+    @Column(name = "is_deleted", nullable = false)
+    private Boolean isDeleted;
+
     public void removeArticle(Article article) {
         articles.remove(article);
+        article.getCategories().remove(this);
     }
 
 }
