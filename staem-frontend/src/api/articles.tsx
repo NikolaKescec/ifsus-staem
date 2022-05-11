@@ -46,3 +46,22 @@ export async function create(
 
   return response.json();
 }
+
+// PUT /article/:id
+export async function update(
+  id: number,
+  command: CreateArticleCommand
+): Promise<ArticleDetailsResponse> {
+  const response = await fetch(paths.articles.update(id), {
+    method: "PUT",
+    headers: getBearerToken(),
+    body: JSON.stringify(command),
+  });
+
+  if (response.status === 400) {
+    const data = await response.json();
+    throw new ValidationError(transformErrors(data));
+  }
+
+  return response.json();
+}

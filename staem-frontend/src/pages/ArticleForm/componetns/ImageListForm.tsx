@@ -137,7 +137,11 @@ function ImageUploadIcon({ form, ...props }: ImageUploadIconProps) {
   return (
     <Group spacing={10}>
       {form.values.pictures.map((picture) => (
-        <Image key={picture.urlFull} src={picture.urlFull} height="100px" />
+        <Image
+          key={picture.urlThumbnail}
+          src={picture.urlFull}
+          height="100px"
+        />
       ))}
     </Group>
   );

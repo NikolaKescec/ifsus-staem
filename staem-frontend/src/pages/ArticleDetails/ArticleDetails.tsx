@@ -1,9 +1,10 @@
 import React from "react";
 
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 import {
+  ActionIcon,
   Badge,
   Button,
   Card,
@@ -20,7 +21,7 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
-import { IconCreditCard, IconShoppingCartPlus } from "@tabler/icons";
+import { IconCreditCard, IconEdit, IconShoppingCartPlus } from "@tabler/icons";
 
 import ImageCarousel from "../../components/ImageCarousel";
 import Spinner from "../../components/Spinner";
@@ -57,7 +58,12 @@ function ArticleDisplay() {
   return (
     <Stack>
       <Group position="apart">
-        <TitleDisplay />
+        <Group>
+          <ActionIcon component={Link} to={`/article/${result!.id}/update`}>
+            <IconEdit color="yellow" />
+          </ActionIcon>
+          <TitleDisplay />
+        </Group>
         <NameDisplay genres={result!.genres} />
       </Group>
 

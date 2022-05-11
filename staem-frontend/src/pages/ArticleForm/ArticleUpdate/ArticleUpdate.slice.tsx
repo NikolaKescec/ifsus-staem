@@ -4,9 +4,9 @@ import {
   ArticleDetailsResponse,
   ArticlesFilter,
   Status,
-} from "../../api/types";
-import * as actions from "./ArticleDetails.actions";
-import { StateWithStatus } from "../../store/types";
+} from "../../../api/types";
+import * as actions from "./ArticleUpdate.actions";
+import { StateWithStatus } from "../../../store/types";
 
 export type Filter = ArticlesFilter;
 
@@ -18,9 +18,9 @@ const initialState = {
   status: "idle" as Status,
 } as State;
 
-const articleDetailsSlice = createSlice({
+const articleUpdateSlice = createSlice({
   initialState,
-  name: "articleDetails",
+  name: "articleUpdate",
   reducers: {},
   extraReducers: (builder) => {
     builder
@@ -38,4 +38,4 @@ const articleDetailsSlice = createSlice({
   },
 });
 
-export const articleDetails = articleDetailsSlice.reducer;
+export const articleUpdate = articleUpdateSlice.reducer;

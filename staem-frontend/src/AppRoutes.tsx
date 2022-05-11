@@ -11,6 +11,7 @@ import MyGames from "./pages/MyGames/MyGames";
 import PublisherList from "./pages/PublisherList/PublisherList";
 import NotFound from "./pages/NotFound";
 import Profile from "./pages/Profile";
+import ArticleUpdate from "./pages/ArticleForm/ArticleUpdate/ArticleUpdate";
 
 export default function AppRoutes() {
   return (
@@ -25,6 +26,7 @@ export default function AppRoutes() {
         <Route path="/genres" element={<GenreList />} />
         <Route path="/publishers" element={<PublisherList />} />
       </Route>
+      <Route path="/article/:id/update" element={<ArticleUpdate />} />
       <Route path="/article/:id" element={<ArticleDetails />} />
       <Route path="*" element={<NotFound />} />
     </Routes>

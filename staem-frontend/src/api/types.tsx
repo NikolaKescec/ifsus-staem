@@ -67,11 +67,11 @@ export type CreateArticleCommand = {
   price: number | undefined;
   currency: string;
   pictureUrl: string;
-  releaseDate: string;
-  categories: number[];
-  developers: number[];
-  genres: number[];
-  publishers: number[];
+  releaseDate: string | Date;
+  categories: string[];
+  developers: string[];
+  genres: string[];
+  publishers: string[];
   pictures: CreatePictureCommand[];
 };
 
@@ -166,4 +166,9 @@ export type ImgbbResponse = {
   };
   success: boolean;
   status: number;
+};
+
+export type DataValues = {
+  value: string;
+  label: string;
 };

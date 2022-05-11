@@ -19,6 +19,7 @@ export const articles = {
   create: api.articles,
   findAll: (query: any) => `${api.articles}/?${createQuery(query)}`,
   findById: (id: number) => `${api.articles}/${id}`,
+  update: (id: number) => `${api.articles}/${id}`,
 };
 
 export const categories = {

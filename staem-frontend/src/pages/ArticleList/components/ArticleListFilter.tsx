@@ -1,5 +1,6 @@
 import React from "react";
 
+import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 import {
@@ -14,7 +15,7 @@ import {
   TextInput,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { IconFilter, IconFilterOff } from "@tabler/icons";
+import { IconCirclePlus, IconFilter, IconFilterOff } from "@tabler/icons";
 
 import * as actions from "../ArticleList.actions";
 import * as selectors from "../ArticleList.selectors";
@@ -109,18 +110,28 @@ export default function ArticleListFilter() {
             </Stack>
           </Grid.Col>
         </Grid>
-        <Group position="right" mt="md">
+        <Group position="apart" mt="xl">
           <Button
             type="button"
-            color="red"
-            leftIcon={<IconFilterOff />}
-            onClick={onReset}
+            component={Link}
+            to="/article/new"
+            leftIcon={<IconCirclePlus />}
           >
-            Reset
+            Create new article
           </Button>
-          <Button type="submit" leftIcon={<IconFilter />}>
-            Search
-          </Button>
+          <Group>
+            <Button
+              type="button"
+              color="red"
+              leftIcon={<IconFilterOff />}
+              onClick={onReset}
+            >
+              Reset
+            </Button>
+            <Button type="submit" leftIcon={<IconFilter />}>
+              Search
+            </Button>
+          </Group>
         </Group>
       </form>
     </Paper>
