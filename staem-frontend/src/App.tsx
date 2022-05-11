@@ -68,8 +68,6 @@ function UiProvider() {
 }
 
 function AppLayout() {
-  const [scroll, scrollTo] = useWindowScroll();
-
   return (
     <AppShell
       padding="md"

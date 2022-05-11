@@ -1,19 +1,13 @@
 import React from "react";
 
-import {
-  Box,
-  Group,
-  Image,
-  MantineTheme,
-  Text,
-  useMantineTheme,
-} from "@mantine/core";
-import { Dropzone, DropzoneStatus, IMAGE_MIME_TYPE } from "@mantine/dropzone";
+import { Box, Group, Image, Text, useMantineTheme } from "@mantine/core";
+import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { UseFormReturnType } from "@mantine/form/lib/use-form";
 import { IconUpload, IconX, TablerIcon } from "@tabler/icons";
 
 import * as imgbbApi from "../../../api/imgbb";
 import { CreateArticleCommand, CreatePictureCommand } from "../../../api/types";
+import { getIconColor } from "../util/colorUtil";
 
 type ImageListProps = {
   form: UseFormReturnType<CreateArticleCommand>;
@@ -28,7 +22,7 @@ export default function ImageListForm({ form }: ImageListProps) {
     setLoading(true);
 
     const pictures: CreatePictureCommand[] = [];
-    let errorOccured = false;
+    let errorOccurred = false;
 
     for (const file of files) {
       try {
@@ -43,14 +37,14 @@ export default function ImageListForm({ form }: ImageListProps) {
           pictures.push(command);
           form.setFieldValue("pictures", [...form.values.pictures, command]);
         } else {
-          errorOccured = true;
+          errorOccurred = true;
         }
       } catch (error) {
-        errorOccured = true;
+        errorOccurred = true;
       }
 
       form.setFieldValue("pictures", [...form.values.pictures, ...pictures]);
-      if (errorOccured) {
+      if (errorOccurred) {
         form.setFieldError("pictures", "Upload failed");
       } else {
         form.setFieldError("pictures", null);
@@ -92,16 +86,6 @@ export default function ImageListForm({ form }: ImageListProps) {
       )}
     </Box>
   );
-}
-
-function getIconColor(status: DropzoneStatus, theme: MantineTheme) {
-  return status.accepted
-    ? theme.colors[theme.primaryColor][theme.colorScheme === "dark" ? 4 : 6]
-    : status.rejected
-    ? theme.colors.red[theme.colorScheme === "dark" ? 4 : 6]
-    : theme.colorScheme === "dark"
-    ? theme.colors.dark[0]
-    : theme.colors.gray[7];
 }
 
 type ImageUploadIconProps = React.ComponentProps<TablerIcon> & {

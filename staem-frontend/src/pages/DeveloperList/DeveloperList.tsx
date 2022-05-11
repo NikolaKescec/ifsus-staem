@@ -22,7 +22,7 @@ import UpdateCatalogEntryModal from "../../components/UpdateCatalogEntryModal";
 import * as actions from "../../store/shared/developer.actions";
 import * as selectors from "../../store/shared/developer.selectors";
 
-export default function CategoryList() {
+export default function DeveloperList() {
   const result = useSelector(selectors.result);
 
   const [modalDeveloper, setModalDeveloper] =
@@ -92,6 +92,8 @@ export default function CategoryList() {
                     </td>
                   </tr>
                 );
+              } else {
+                return null;
               }
             })}
           </tbody>
@@ -124,7 +126,7 @@ export default function CategoryList() {
         <Pagination
           total={totalPages}
           {...pagination}
-          onChange={(page: number) => onPageChange(page)}
+          onChange={(newPage: number) => onPageChange(newPage)}
         />
       </Center>
     </Container>

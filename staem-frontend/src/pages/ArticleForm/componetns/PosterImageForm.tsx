@@ -1,19 +1,13 @@
 import React from "react";
 
-import {
-  Box,
-  Group,
-  Image,
-  MantineTheme,
-  Text,
-  useMantineTheme,
-} from "@mantine/core";
-import { Dropzone, DropzoneStatus, IMAGE_MIME_TYPE } from "@mantine/dropzone";
+import { Box, Group, Image, Text, useMantineTheme } from "@mantine/core";
+import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { UseFormReturnType } from "@mantine/form/lib/use-form";
 import { IconUpload, IconX, TablerIcon } from "@tabler/icons";
 
 import * as imgbbApi from "../../../api/imgbb";
 import { CreateArticleCommand } from "../../../api/types";
+import { getIconColor } from "../util/colorUtil";
 
 type PosterImageProps = {
   form: UseFormReturnType<CreateArticleCommand>;
@@ -74,16 +68,6 @@ export default function PosterImageForm({ form }: PosterImageProps) {
       )}
     </Box>
   );
-}
-
-function getIconColor(status: DropzoneStatus, theme: MantineTheme) {
-  return status.accepted
-    ? theme.colors[theme.primaryColor][theme.colorScheme === "dark" ? 4 : 6]
-    : status.rejected
-    ? theme.colors.red[theme.colorScheme === "dark" ? 4 : 6]
-    : theme.colorScheme === "dark"
-    ? theme.colors.dark[0]
-    : theme.colors.gray[7];
 }
 
 type ImageUploadIconProps = React.ComponentProps<TablerIcon> & {

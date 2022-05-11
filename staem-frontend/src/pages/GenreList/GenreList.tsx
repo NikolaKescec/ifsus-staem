@@ -22,7 +22,7 @@ import * as selectors from "../../store/shared/genre.selectors";
 import UpdateCatalogEntryModal from "../../components/UpdateCatalogEntryModal";
 import DeleteCatalogEntryModal from "../../components/DeleteCatalogEntryModal";
 
-export default function CategoryList() {
+export default function GenreList() {
   const result = useSelector(selectors.result);
 
   const [modalGenre, setModalGenre] = React.useState<GenreResponse | null>(
@@ -93,6 +93,8 @@ export default function CategoryList() {
                     </td>
                   </tr>
                 );
+              } else {
+                return null;
               }
             })}
           </tbody>
@@ -125,7 +127,7 @@ export default function CategoryList() {
         <Pagination
           total={totalPages}
           {...pagination}
-          onChange={(page: number) => onPageChange(page)}
+          onChange={(newPage: number) => onPageChange(newPage)}
         />
       </Center>
     </Container>

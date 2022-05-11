@@ -92,6 +92,8 @@ export default function CategoryList() {
                     </td>
                   </tr>
                 );
+              } else {
+                return null;
               }
             })}
           </tbody>
@@ -124,7 +126,7 @@ export default function CategoryList() {
         <Pagination
           total={totalPages}
           {...pagination}
-          onChange={(page: number) => onPageChange(page)}
+          onChange={(newPage: number) => onPageChange(newPage)}
         />
       </Center>
     </Container>
