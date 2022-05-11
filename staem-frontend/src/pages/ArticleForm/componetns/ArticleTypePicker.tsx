@@ -64,6 +64,7 @@ export default function ArticleTypePicker({ form }: ArticleTypePickerProps) {
       <Grid.Col span={8}>
         {value === "DLC" && (
           <Autocomplete
+            {...form.getInputProps("baseGameId")}
             value={gameValue}
             onChange={onChange}
             data={games}

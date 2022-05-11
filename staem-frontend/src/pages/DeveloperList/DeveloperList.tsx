@@ -100,7 +100,7 @@ export default function CategoryList() {
 
       {updateModal && modalDeveloper && (
         <UpdateCatalogEntryModal
-          title="Update Category"
+          title="developer"
           modalOpen={updateModal}
           setModalOpen={setUpdateModal}
           item={modalDeveloper}

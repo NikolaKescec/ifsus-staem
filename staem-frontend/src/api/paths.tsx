@@ -16,6 +16,7 @@ const api = {
 };
 
 export const articles = {
+  create: api.articles,
   findAll: (query: any) => `${api.articles}/?${createQuery(query)}`,
   findById: (id: number) => `${api.articles}/${id}`,
 };

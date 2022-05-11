@@ -41,7 +41,7 @@ export default function ArticleForm({ form }: ArticleFormProps) {
     <Stack spacing={20}>
       <Card>
         <ArticleTypePicker form={form} />
-        <Grid>
+        <Grid mt={10}>
           <Grid.Col span={4}>
             <TextInput label="Title" {...form.getInputProps("title")} />
           </Grid.Col>
