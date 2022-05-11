@@ -52,9 +52,32 @@ export type ArticleDetailsResponse = {
   publishers: PublisherResponse[];
 };
 
+export type ArticleType = "GAME" | "DLC";
+
 export type CategoryResponse = {
   id: number;
   name: string;
+};
+
+export type CreateArticleCommand = {
+  type: ArticleType | string;
+  baseGameId: number | undefined;
+  title: string;
+  description: string;
+  price: number | undefined;
+  currency: string;
+  pictureUrl: string;
+  releaseDate: string | Date;
+  categories: string[];
+  developers: string[];
+  genres: string[];
+  publishers: string[];
+  pictures: CreatePictureCommand[];
+};
+
+export type CreatePictureCommand = {
+  urlFull: string;
+  urlThumbnail: string;
 };
 
 export type DeveloperResponse = {
@@ -104,4 +127,48 @@ export type PriceRange = {
 export type UpdateCatalogValues = {
   id: number;
   name: string;
+};
+
+export type ImgbbResponse = {
+  data: {
+    id: string;
+    title: string;
+    url_viewer: string;
+    url: string;
+    display_url: string;
+    width: string;
+    height: string;
+    size: string;
+    time: string;
+    expiration: string;
+    image: {
+      filename: string;
+      name: string;
+      mime: string;
+      extension: string;
+      url: string;
+    };
+    thumb: {
+      filename: string;
+      name: string;
+      mime: string;
+      extension: string;
+      url: string;
+    };
+    medium: {
+      filename: string;
+      name: string;
+      mime: string;
+      extension: string;
+      url: string;
+    };
+    delete_url: string;
+  };
+  success: boolean;
+  status: number;
+};
+
+export type DataValues = {
+  value: string;
+  label: string;
 };

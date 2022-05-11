@@ -21,33 +21,43 @@ export default function SharedProvider({
 }: React.PropsWithChildren<{}>) {
   const dispatch = useAppDispatch();
   const { isAuthenticated, getAccessTokenSilently } = useAuth0();
+  const [fetchedToken, setFetchedToken] = React.useState<string | null>(null);
 
   const categoryStatus = useSelector(categorySelectors.status);
   const developerStatus = useSelector(developerSelectors.status);
   const genreStatus = useSelector(genreSelectors.status);
   const publisherStatus = useSelector(publisherSelectors.status);
 
-  React.useEffect(() => {
-    dispatch(categoryActions.findAll());
-    dispatch(developerActions.findAll());
-    dispatch(genreActions.findAll());
-    dispatch(publisherActions.findAll());
-  }, [dispatch]);
+  const isLoading =
+    categoryStatus !== "success" ||
+    developerStatus !== "success" ||
+    genreStatus !== "success" ||
+    publisherStatus !== "success";
 
   React.useEffect(() => {
     const getToken = async () => {
       const token = await getAccessTokenSilently();
       localStorage.setItem("access_token", token);
+      setFetchedToken(token);
     };
-    getToken();
+
+    if (isAuthenticated) {
+      getToken();
+    } else {
+      localStorage.removeItem("access_token");
+    }
   }, [isAuthenticated, getAccessTokenSilently]);
 
-  if (
-    categoryStatus !== "success" ||
-    developerStatus !== "success" ||
-    genreStatus !== "success" ||
-    publisherStatus !== "success"
-  ) {
+  React.useEffect(() => {
+    if (isLoading) {
+      dispatch(categoryActions.findAll());
+      dispatch(developerActions.findAll());
+      dispatch(genreActions.findAll());
+      dispatch(publisherActions.findAll());
+    }
+  }, [dispatch, fetchedToken]);
+
+  if (isLoading) {
     return (
       <Center>
         <LoadingOverlay visible={true} />

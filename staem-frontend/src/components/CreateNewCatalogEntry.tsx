@@ -47,7 +47,7 @@ export default function CreateNewCatalogEntry({
 
       dispatch(dispatchAction());
     } catch (error: any) {
-      form.setFieldError("name", error.errors.name);
+      form.setErrors(error.errors);
       showNotification({
         title: "Error",
         message: `An error occurred while creating the ${title}`,

@@ -4,12 +4,11 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import {
+  Badge,
   Center,
-  Chip,
   Grid,
   Group,
   Image,
-  Loader,
   Pagination,
   Paper,
   Stack,
@@ -17,7 +16,8 @@ import {
 } from "@mantine/core";
 
 import { ArticleResponse } from "../../../api/types";
-import { currencyMap } from "../../../constants/currency";
+import PriceDisplay from "../../../components/PriceDisplay";
+import Spinner from "../../../components/Spinner";
 import * as selectors from "../ArticleList.selectors";
 import * as actions from "../ArticleList.actions";
 import { useAppDispatch } from "../../../store/store";
@@ -46,11 +46,7 @@ export default function ArticleListResult() {
   };
 
   if (status !== "success") {
-    return (
-      <Center p={30}>
-        <Loader />
-      </Center>
-    );
+    return <Spinner />;
   }
 
   return <ArticleList />;
@@ -93,7 +89,9 @@ function ArticleList() {
               </Grid.Col>
               <Grid.Col span={2} pr={20} pt={20}>
                 <Group position="right">
-                  <PriceDisplay {...article} />
+                  <Badge>
+                    <PriceDisplay {...article} />
+                  </Badge>
                 </Group>
               </Grid.Col>
             </Grid>
@@ -110,24 +108,5 @@ function ArticleList() {
         )}
       </Stack>
     </>
-  );
-}
-
-function PriceDisplay({
-  price,
-  currency,
-}: {
-  price: number;
-  currency: string;
-}) {
-  // @ts-ignore
-  const currencySymbol: any = currencyMap[currency];
-
-  return (
-    <Chip>
-      <Text weight="bolder">
-        {price === 0 ? "Free" : `${price} ${currencySymbol}`}
-      </Text>
-    </Chip>
   );
 }

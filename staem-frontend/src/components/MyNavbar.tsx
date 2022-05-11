@@ -105,7 +105,10 @@ function UserProfile() {
       </Menu.Item>
       <Menu.Item
         icon={<IconLogout />}
-        onClick={() => logout({ returnTo: window.location.origin })}
+        onClick={() => {
+          localStorage.removeItem("access_token");
+          logout({ returnTo: window.location.origin });
+        }}
       >
         Log Out
       </Menu.Item>

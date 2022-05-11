@@ -4,11 +4,17 @@ import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 
 import {
+  Affix,
   AppShell,
+  Button,
   ColorScheme,
   ColorSchemeProvider,
   MantineProvider,
+  Transition,
 } from "@mantine/core";
+import { useHotkeys, useLocalStorage, useWindowScroll } from "@mantine/hooks";
+import { NotificationsProvider } from "@mantine/notifications";
+import { IconArrowUp } from "@tabler/icons";
 
 import { Auth0Provider } from "@auth0/auth0-react";
 
@@ -16,8 +22,6 @@ import AppRoutes from "./AppRoutes";
 import MyNavbar from "./components/MyNavbar";
 import store from "./store/store";
 import SharedProvider from "./components/SharedProvider";
-import { useHotkeys, useLocalStorage } from "@mantine/hooks";
-import { NotificationsProvider } from "@mantine/notifications";
 
 export default function App() {
   return (
@@ -38,7 +42,7 @@ export default function App() {
 function UiProvider() {
   const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
     key: "mantine-color-scheme",
-    defaultValue: "light",
+    defaultValue: "dark",
     getInitialValueInEffect: true,
   });
 
@@ -53,7 +57,7 @@ function UiProvider() {
       toggleColorScheme={toggleColorScheme}
     >
       <MantineProvider theme={{ colorScheme }}>
-        <NotificationsProvider>
+        <NotificationsProvider position="bottom-left">
           <BrowserRouter>
             <AppLayout />
           </BrowserRouter>
@@ -64,6 +68,8 @@ function UiProvider() {
 }
 
 function AppLayout() {
+  const [scroll, scrollTo] = useWindowScroll();
+
   return (
     <AppShell
       padding="md"
@@ -81,7 +87,28 @@ function AppLayout() {
     >
       <SharedProvider>
         <AppRoutes />
+        <ScrollToTop />
       </SharedProvider>
     </AppShell>
+  );
+}
+
+function ScrollToTop() {
+  const [scroll, scrollTo] = useWindowScroll();
+
+  return (
+    <Affix position={{ bottom: 20, right: 20 }}>
+      <Transition transition="slide-up" mounted={scroll.y > 0}>
+        {(transitionStyles) => (
+          <Button
+            leftIcon={<IconArrowUp />}
+            style={transitionStyles}
+            onClick={() => scrollTo({ y: 0 })}
+          >
+            Scroll to top
+          </Button>
+        )}
+      </Transition>
+    </Affix>
   );
 }

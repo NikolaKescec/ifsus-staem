@@ -51,7 +51,7 @@ export default function UpdateCatalogEntryModal({
       setModalOpen(false);
       dispatch(dispatchAction());
     } catch (error: any) {
-      form.setFieldError("name", error.errors.name);
+      form.setErrors(error.errors);
       showNotification({
         title: "Error",
         message: `An error occurred while updating the ${title}`,

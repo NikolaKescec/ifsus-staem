@@ -1,4 +1,4 @@
-export const currencyMap = {
+export const CURRENCY_MAP = {
   AED: "د.إ",
   AFN: "؋",
   ALL: "L",
@@ -186,3 +186,10 @@ export const currencyMap = {
   ZWD: "Z$",
   ZWL: "$",
 };
+
+export const CURRENCY_LIST = Object.entries(CURRENCY_MAP).map(
+  ([key, value]) => ({
+    value: key,
+    label: `${key} ${value}`,
+  })
+);
