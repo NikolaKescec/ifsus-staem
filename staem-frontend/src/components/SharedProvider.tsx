@@ -28,6 +28,12 @@ export default function SharedProvider({
   const genreStatus = useSelector(genreSelectors.status);
   const publisherStatus = useSelector(publisherSelectors.status);
 
+  const isLoading =
+    categoryStatus !== "success" ||
+    developerStatus !== "success" ||
+    genreStatus !== "success" ||
+    publisherStatus !== "success";
+
   React.useEffect(() => {
     const getToken = async () => {
       const token = await getAccessTokenSilently();
@@ -43,18 +49,15 @@ export default function SharedProvider({
   }, [isAuthenticated, getAccessTokenSilently]);
 
   React.useEffect(() => {
-    dispatch(categoryActions.findAll());
-    dispatch(developerActions.findAll());
-    dispatch(genreActions.findAll());
-    dispatch(publisherActions.findAll());
+    if (isLoading) {
+      dispatch(categoryActions.findAll());
+      dispatch(developerActions.findAll());
+      dispatch(genreActions.findAll());
+      dispatch(publisherActions.findAll());
+    }
   }, [dispatch, fetchedToken]);
 
-  if (
-    categoryStatus !== "success" ||
-    developerStatus !== "success" ||
-    genreStatus !== "success" ||
-    publisherStatus !== "success"
-  ) {
+  if (isLoading) {
     return (
       <Center>
         <LoadingOverlay visible={true} />

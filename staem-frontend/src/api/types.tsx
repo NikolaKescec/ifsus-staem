@@ -57,6 +57,26 @@ export type CategoryResponse = {
   name: string;
 };
 
+export type CreateArticleCommand = {
+  title: string;
+  description: string;
+  price: number | string;
+  currency: string;
+  pictureUrl: string;
+  releaseDate: string;
+  dlcs: CreateArticleCommand[];
+  categories: number[];
+  developers: number[];
+  genres: number[];
+  publishers: number[];
+  pictures: CreatePictureCommand[];
+};
+
+export type CreatePictureCommand = {
+  urlFull: string;
+  urlThumbnail: string;
+};
+
 export type DeveloperResponse = {
   id: number;
   name: string;
@@ -104,4 +124,43 @@ export type PriceRange = {
 export type UpdateCatalogValues = {
   id: number;
   name: string;
+};
+
+export type ImgbbResponse = {
+  data: {
+    id: string;
+    title: string;
+    url_viewer: string;
+    url: string;
+    display_url: string;
+    width: string;
+    height: string;
+    size: string;
+    time: string;
+    expiration: string;
+    image: {
+      filename: string;
+      name: string;
+      mime: string;
+      extension: string;
+      url: string;
+    };
+    thumb: {
+      filename: string;
+      name: string;
+      mime: string;
+      extension: string;
+      url: string;
+    };
+    medium: {
+      filename: string;
+      name: string;
+      mime: string;
+      extension: string;
+      url: string;
+    };
+    delete_url: string;
+  };
+  success: boolean;
+  status: number;
 };

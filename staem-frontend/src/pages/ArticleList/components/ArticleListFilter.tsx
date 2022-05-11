@@ -24,6 +24,7 @@ import * as developerSelectors from "../../../store/shared/developer.selectors";
 import * as genreSelectors from "../../../store/shared/genre.selectors";
 import * as publisherSelectors from "../../../store/shared/publisher.selectors";
 import { useAppDispatch } from "../../../store/store";
+import { mapDataToSelectItems } from "../../../util/selectUtils";
 
 export default function ArticleListFilter() {
   const dispatch = useAppDispatch();
@@ -33,13 +34,6 @@ export default function ArticleListFilter() {
   const developers = useSelector(developerSelectors.result);
   const genres = useSelector(genreSelectors.result);
   const publishers = useSelector(publisherSelectors.result);
-
-  const mapDataToSelectItems = (data: { id: number; name: string }[]) => {
-    return data.map((item) => ({
-      value: item.id.toString(),
-      label: item.name,
-    }));
-  };
 
   const form = useForm({
     initialValues: filter,

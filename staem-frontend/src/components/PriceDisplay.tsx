@@ -2,7 +2,7 @@ import React from "react";
 
 import { Text } from "@mantine/core";
 
-import { currencyMap } from "../constants/currency";
+import { CURRENCY_MAP } from "../constants/currency";
 
 type PriceDisplayProps = {
   price: number;
@@ -11,7 +11,7 @@ type PriceDisplayProps = {
 
 export default function PriceDisplay({ price, currency }: PriceDisplayProps) {
   // @ts-ignore
-  const currencySymbol: any = currencyMap[currency];
+  const currencySymbol: any = CURRENCY_MAP[currency];
 
   return (
     <Text weight="bolder">
