@@ -52,19 +52,22 @@ export type ArticleDetailsResponse = {
   publishers: PublisherResponse[];
 };
 
+export type ArticleType = "GAME" | "DLC";
+
 export type CategoryResponse = {
   id: number;
   name: string;
 };
 
 export type CreateArticleCommand = {
+  type: ArticleType | string;
+  baseGameId?: number;
   title: string;
   description: string;
   price: number | string;
   currency: string;
   pictureUrl: string;
   releaseDate: string;
-  dlcs: CreateArticleCommand[];
   categories: number[];
   developers: number[];
   genres: number[];

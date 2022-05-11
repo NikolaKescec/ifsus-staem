@@ -17,13 +17,13 @@ import { IconCirclePlus } from "@tabler/icons";
 export default function ArticleNew() {
   const form = useForm<CreateArticleCommand>({
     initialValues: {
+      type: "",
       title: "",
       description: "",
       price: "",
       currency: "",
       pictureUrl: "",
       releaseDate: "",
-      dlcs: formList([]),
       categories: formList([]),
       developers: formList([]),
       genres: formList([]),

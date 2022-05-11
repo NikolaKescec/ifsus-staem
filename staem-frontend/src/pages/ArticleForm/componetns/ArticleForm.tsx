@@ -18,13 +18,14 @@ import { UseFormReturnType } from "@mantine/form/lib/use-form";
 
 import { CreateArticleCommand } from "../../../api/types";
 import { CURRENCY_LIST } from "../../../constants/currency";
+import ArticleTypePicker from "./ArticleTypePicker";
+import ImageListForm from "./ImageListForm";
 import PosterImageForm from "./PosterImageForm";
 import * as categorySelectors from "../../../store/shared/category.selectors";
 import * as developerSelectors from "../../../store/shared/developer.selectors";
 import * as genreSelectors from "../../../store/shared/genre.selectors";
 import * as publisherSelectors from "../../../store/shared/publisher.selectors";
 import { mapDataToSelectItems } from "../../../util/selectUtils";
-import ImageListForm from "./ImageListForm";
 
 type ArticleFormProps = {
   form: UseFormReturnType<CreateArticleCommand>;
@@ -39,6 +40,7 @@ export default function ArticleForm({ form }: ArticleFormProps) {
   return (
     <Stack spacing={20}>
       <Card>
+        <ArticleTypePicker form={form} />
         <Grid>
           <Grid.Col span={4}>
             <TextInput label="Title" {...form.getInputProps("title")} />
