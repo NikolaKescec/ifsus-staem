@@ -75,6 +75,10 @@ export type CreateArticleCommand = {
   pictures: CreatePictureCommand[];
 };
 
+export type CreateCartCommand = {
+  articles: number[];
+};
+
 export type CreatePictureCommand = {
   urlFull: string;
   urlThumbnail: string;

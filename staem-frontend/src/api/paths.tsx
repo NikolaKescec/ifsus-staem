@@ -8,6 +8,7 @@ const IMGBB_KEY =
 
 const api = {
   articles: `${API_BASE_URL}/article`,
+  cart: `${API_BASE_URL}/cart`,
   categories: `${API_BASE_URL}/category`,
   developers: `${API_BASE_URL}/developer`,
   genres: `${API_BASE_URL}/genre`,
@@ -20,6 +21,10 @@ export const articles = {
   findAll: (query: any) => `${api.articles}/?${createQuery(query)}`,
   findById: (id: number) => `${api.articles}/${id}`,
   update: (id: number) => `${api.articles}/${id}`,
+};
+
+export const cart = {
+  create: api.cart,
 };
 
 export const categories = {

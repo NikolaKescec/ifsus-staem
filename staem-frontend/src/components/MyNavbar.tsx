@@ -10,12 +10,19 @@ import {
   Text,
   useMantineColorScheme,
 } from "@mantine/core";
-import { IconLogout, IconMoonStars, IconSun, IconUser } from "@tabler/icons";
+import {
+  IconLogout,
+  IconMoonStars,
+  IconShoppingCart,
+  IconSun,
+  IconUser,
+} from "@tabler/icons";
 
 import { Link, useNavigate } from "react-router-dom";
 
 import { useAuth0 } from "@auth0/auth0-react";
 
+import CartDrawer from "./CartDrawer";
 import LoginButton from "./LoginButton";
 
 export default function MyNavbar() {
@@ -27,11 +34,34 @@ export default function MyNavbar() {
         </Group>
         <Group spacing="sm">
           <ThemeToggle />
+          <CartToggle />
           <LoginButton />
           <UserProfile />
         </Group>
       </Group>
     </Header>
+  );
+}
+
+function CartToggle() {
+  const [cartDrawerOpen, setCartDrawerOpen] = React.useState(false);
+
+  return (
+    <>
+      <ActionIcon
+        size="lg"
+        variant="outline"
+        title="Open Shopping Cart"
+        color="orange"
+        onClick={() => setCartDrawerOpen(true)}
+      >
+        <IconShoppingCart />{" "}
+      </ActionIcon>
+      <CartDrawer
+        opened={cartDrawerOpen}
+        onClose={() => setCartDrawerOpen(false)}
+      />
+    </>
   );
 }
 

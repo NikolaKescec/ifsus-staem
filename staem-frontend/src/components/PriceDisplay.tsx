@@ -14,7 +14,7 @@ export default function PriceDisplay({ price, currency }: PriceDisplayProps) {
   const currencySymbol: any = CURRENCY_MAP[currency];
 
   return (
-    <Text weight="bolder">
+    <Text weight="bolder" size="sm">
       {price === 0 ? "Free" : `${price} ${currencySymbol}`}
     </Text>
   );

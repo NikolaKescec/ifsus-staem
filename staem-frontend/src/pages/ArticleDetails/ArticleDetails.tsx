@@ -21,15 +21,24 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
-import { IconCreditCard, IconEdit, IconShoppingCartPlus } from "@tabler/icons";
+import {
+  IconCircleCheck,
+  IconCircleX,
+  IconCreditCard,
+  IconEdit,
+  IconShoppingCartPlus,
+} from "@tabler/icons";
 
+import * as cartApi from "../../api/cart";
+import { ArticleResponse } from "../../api/types";
 import ImageCarousel from "../../components/ImageCarousel";
 import Spinner from "../../components/Spinner";
 import PriceDisplay from "../../components/PriceDisplay";
 import * as actions from "./ArticleDetails.actions";
 import * as selectors from "./ArticleDetails.selectors";
+import * as cartActions from "../../store/shared/cart.actions";
+import * as cartSelectors from "../../store/shared/cart.selectors";
 import { useAppDispatch } from "../../store/store";
-import { ArticleResponse } from "../../api/types";
 
 export default function ArticleDetails() {
   const { id } = useParams();
@@ -107,17 +116,41 @@ function TitleDisplay() {
 }
 
 function BuyCard() {
-  const result = useSelector(selectors.result);
+  const dispatch = useAppDispatch();
 
-  const onBuy = () => {
-    showNotification({
-      message: "Purchase successful",
-    });
+  const result = useSelector(selectors.result);
+  const cartItems = useSelector(cartSelectors.items);
+
+  const itemExistsInCart: boolean =
+    cartItems.filter((item) => item.id === result!.id).length > 0;
+
+  const onBuy = async () => {
+    try {
+      await cartApi.create({ articles: cartItems.map((item) => item.id) });
+
+      showNotification({
+        message: "Items successfully purchased",
+        color: "green",
+        icon: <IconCircleCheck />,
+      });
+
+      dispatch(cartActions.removeItem(result!.id));
+    } catch (error) {
+      showNotification({
+        message: "Error purchasing items",
+        color: "red",
+        icon: <IconCircleX />,
+      });
+    }
   };
 
   const onAddToCart = () => {
+    dispatch(cartActions.addItem(result!));
+
     showNotification({
       message: "Added to cart",
+      color: "green",
+      icon: <IconShoppingCartPlus />,
     });
   };
 
@@ -138,6 +171,7 @@ function BuyCard() {
           color="orange"
           onClick={onAddToCart}
           rightIcon={<IconShoppingCartPlus />}
+          disabled={itemExistsInCart}
         >
           Add to Cart
         </Button>
