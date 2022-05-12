@@ -1,11 +1,13 @@
 package hr.fer.infsus.staem.controller.request.create;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
-@Data
+@Getter
+@Setter
 public class CreateCategoryRequest {
 
     @NotEmpty(message = "Category name is required")

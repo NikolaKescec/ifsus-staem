@@ -2,7 +2,8 @@ package hr.fer.infsus.staem.entity;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -11,11 +12,13 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.math.BigDecimal;
@@ -28,13 +31,14 @@ import java.util.Set;
 
 @Entity
 @Table(name = "article")
+@SQLDelete(sql = "update article set is_deleted=true where id=?")
+@Where(clause = "is_deleted = false")
 @Getter
 @Setter
 public class Article {
 
     @Id
-    @GeneratedValue(generator = "max-generator")
-    @GenericGenerator(name = "max-generator", strategy = "hr.fer.infsus.staem.generator.StaemEntityIdGenerator")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String title;
@@ -57,72 +61,59 @@ public class Article {
     @Enumerated(EnumType.STRING)
     private ArticleType articleType;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToOne
     @JoinColumn(name = "id_base_article", foreignKey = @ForeignKey(name = "id_base_article"))
-    private List<Article> dlcs;
+    private Article baseArticle;
 
-    @ManyToMany()
+    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @JoinColumn(name = "id_base_article", foreignKey = @ForeignKey(name = "id_base_article"))
+    private List<Article> dlcs = new ArrayList<>();
+
+    @ManyToMany
     @JoinTable(name = "article_publisher",
         joinColumns = { @JoinColumn(name = "id_article", nullable = false) },
         inverseJoinColumns = { @JoinColumn(name = "id_publisher", nullable = false) })
-    private Set<Publisher> publishers;
+    private Set<Publisher> publishers = new LinkedHashSet<>();
 
     @ManyToMany
     @JoinTable(name = "article_developer",
         joinColumns = { @JoinColumn(name = "id_article", nullable = false) },
         inverseJoinColumns = { @JoinColumn(name = "id_developer", nullable = false) })
-    private Set<Developer> developers;
+    private Set<Developer> developers = new LinkedHashSet<>();
 
     @ManyToMany
     @JoinTable(name = "article_category",
         joinColumns = { @JoinColumn(name = "id_article", nullable = false) },
         inverseJoinColumns = { @JoinColumn(name = "id_category", nullable = false) })
-    private Set<Category> categories;
+    private Set<Category> categories = new LinkedHashSet<>();
 
     @ManyToMany
     @JoinTable(name = "article_genre",
         joinColumns = { @JoinColumn(name = "id_article", nullable = false) },
         inverseJoinColumns = { @JoinColumn(name = "id_genre", nullable = false) })
-    private Set<Genre> genres;
+    private Set<Genre> genres = new LinkedHashSet<>();
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_article", foreignKey = @ForeignKey(name = "id_article"), nullable = false)
-    private List<Picture> pictures;
+    private List<Picture> pictures = new ArrayList<>();
+
+    @Column(name = "is_deleted", nullable = false)
+    private Boolean isDeleted = false;
 
     public void addPublisher(Publisher publisher) {
         this.publishers.add(publisher);
-        publisher.getArticles().add(this);
-    }
-
-    public void removePublisher(Publisher publisher) {
-        this.publishers.remove(publisher);
-    }
-
-    public void addDeveloper(Developer developer) {
-        this.developers.add(developer);
-        developer.getArticles().add(this);
-    }
-
-    public void removeDeveloper(Developer developer) {
-        this.developers.remove(developer);
-    }
-
-    public void addCategory(Category category) {
-        this.categories.add(category);
-        category.getArticles().add(this);
-    }
-
-    public void removeCategory(Category category) {
-        this.categories.remove(category);
     }
 
     public void addGenre(Genre genre) {
         this.genres.add(genre);
-        genre.getArticles().add(this);
     }
 
-    public void removeGenre(Genre genre) {
-        this.genres.remove(genre);
+    public void addCategory(Category category) {
+        this.categories.add(category);
+    }
+
+    public void addDeveloper(Developer developer) {
+        this.developers.add(developer);
     }
 
     public List<Article> getDlcs() {

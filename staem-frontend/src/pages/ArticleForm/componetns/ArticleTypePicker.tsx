@@ -46,7 +46,7 @@ export default function ArticleTypePicker({ form }: ArticleTypePickerProps) {
     if (Number(query)) {
       const label = games.filter((game) => game.value === query)[0].label;
       setGameValue(label);
-      form.setFieldValue("baseGameId", Number(query));
+      form.setFieldValue("baseArticleId", Number(query));
     } else {
       setGameValue(query);
     }
@@ -64,7 +64,7 @@ export default function ArticleTypePicker({ form }: ArticleTypePickerProps) {
       <Grid.Col span={8}>
         {value === "DLC" && (
           <Autocomplete
-            {...form.getInputProps("baseGameId")}
+            {...form.getInputProps("baseArticleId")}
             value={gameValue}
             onChange={onChange}
             data={games}

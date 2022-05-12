@@ -11,7 +11,14 @@ public class ValidDlcValidator implements ConstraintValidator<ValidDlc, ValidDlc
 
     @Override
     public boolean isValid(ValidDlcFields value, ConstraintValidatorContext context) {
-        if (value.getArticleType() != ArticleType.GAME && (value.getDlcs() != null || !value.getDlcs().isEmpty())) {
+        if (value.getType() == ArticleType.DLC && (value.getBaseArticleId() == null)) {
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate("DLCs have to have a base article.")
+                .addConstraintViolation();
+
+            return false;
+        }
+        if (value.getType() != ArticleType.DLC && (value.getBaseArticleId() != null)) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate("Non game articles can not have dlcs.")
                 .addConstraintViolation();

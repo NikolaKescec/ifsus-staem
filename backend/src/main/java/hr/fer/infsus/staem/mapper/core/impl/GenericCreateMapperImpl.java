@@ -1,5 +1,6 @@
-package hr.fer.infsus.staem.mapper;
+package hr.fer.infsus.staem.mapper.core.impl;
 
+import hr.fer.infsus.staem.mapper.core.GenericCreateMapper;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;

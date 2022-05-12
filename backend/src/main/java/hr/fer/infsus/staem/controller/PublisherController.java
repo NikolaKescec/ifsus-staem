@@ -4,11 +4,12 @@ import hr.fer.infsus.staem.controller.request.create.CreatePublisherRequest;
 import hr.fer.infsus.staem.controller.request.update.UpdatePublisherRequest;
 import hr.fer.infsus.staem.controller.response.PublisherResponse;
 import hr.fer.infsus.staem.exception.IdMismatchException;
-import hr.fer.infsus.staem.mapper.GenericCreateMapper;
+import hr.fer.infsus.staem.mapper.core.GenericCreateMapper;
 import hr.fer.infsus.staem.service.PublisherCommandService;
 import hr.fer.infsus.staem.service.PublisherQueryService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,13 +42,15 @@ public class PublisherController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('publisher:create')")
     public PublisherResponse create(@RequestBody @Valid CreatePublisherRequest createPublisherRequest) {
         return genericCreateMapper.map(publisherCommandService.create(createPublisherRequest.getName()),
             PublisherResponse.class);
     }
 
     @PutMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAuthority('publisher:update')")
     public PublisherResponse update(@PathVariable("id") Long id,
         @RequestBody @Valid UpdatePublisherRequest updatePublisherRequest) {
         if (!id.equals(updatePublisherRequest.getId())) {
@@ -61,7 +64,8 @@ public class PublisherController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@PathVariable("id") Long id) {
+    @PreAuthorize("hasAuthority('publisher:delete')")
+    public void delete(@PathVariable("id") Long id) {
         publisherCommandService.delete(id);
     }
 

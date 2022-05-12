@@ -42,13 +42,14 @@ export default function ArticleUpdate() {
 }
 
 function ArticleUpdateForm() {
+  const { id } = useParams();
   const result = useSelector(selectors.result);
 
   const form = useForm<CreateArticleCommand>({
     initialValues: {
       ...result!,
       type: "GAME",
-      baseGameId: undefined,
+      baseArticleId: undefined,
       releaseDate: new Date(result!.releaseDate),
       categories: result!.categories.map((category) => category.id.toString()),
       developers: result!.developers.map((developer) =>
@@ -62,7 +63,7 @@ function ArticleUpdateForm() {
     validate: {
       type: (value) =>
         ["GAME", "DLC"].includes(value) ? undefined : "Type is not valid",
-      baseGameId: (value, values) => {
+      baseArticleId: (value, values) => {
         return values.type === "DLC" && !value
           ? "DLC requires base game"
           : undefined;
@@ -97,10 +98,10 @@ function ArticleUpdateForm() {
   const [loading, setLoading] = React.useState(false);
 
   const onSubmit = async (values: CreateArticleCommand) => {
-    console.log(values);
+    console.log(id, values);
 
     try {
-      const response = await articleApi.create(values);
+      const response = await articleApi.update(Number(id), values);
 
       showNotification({
         message: "Article successfully updated",

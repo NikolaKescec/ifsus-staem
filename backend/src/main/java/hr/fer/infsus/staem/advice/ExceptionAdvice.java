@@ -1,5 +1,6 @@
 package hr.fer.infsus.staem.advice;
 
+import hr.fer.infsus.staem.exception.ArticleAlreadyBought;
 import hr.fer.infsus.staem.exception.EntityNotFoundException;
 import hr.fer.infsus.staem.exception.IdMismatchException;
 import lombok.NoArgsConstructor;
@@ -29,6 +30,11 @@ public class ExceptionAdvice {
 
     @ExceptionHandler(value = { IdMismatchException.class })
     public ResponseEntity<String> handleIdMismatchException(IdMismatchException exception) {
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = { ArticleAlreadyBought.class })
+    public ResponseEntity<String> handleArticleAlreadyBought(ArticleAlreadyBought exception) {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 

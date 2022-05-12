@@ -58,6 +58,8 @@ public final class ArticleSpecification {
                     findArticleQuery.getPriceRange().getMaxPrice()));
             }
 
+            predicates.add(cb.isFalse(root.get("isDeleted")));
+
             return cb.and(predicates.toArray(new Predicate[0]));
         };
 
@@ -65,7 +67,7 @@ public final class ArticleSpecification {
 
     private static <T> Predicate byJoinedId(Root<Article> root, CriteriaBuilder cb, String joinTarget, Long id) {
         final Join<Article, T> leftOuterJoin = root.join(joinTarget, JoinType.LEFT);
-        return cb.equal(leftOuterJoin.get("id"), id);
+        return cb.and(cb.equal(leftOuterJoin.get("id"), id), cb.isFalse(leftOuterJoin.get("isDeleted")));
     }
 
 }

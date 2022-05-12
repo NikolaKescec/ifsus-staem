@@ -5,11 +5,12 @@ import hr.fer.infsus.staem.controller.request.update.UpdateDeveloperRequest;
 import hr.fer.infsus.staem.controller.response.DeveloperResponse;
 import hr.fer.infsus.staem.controller.response.GenreResponse;
 import hr.fer.infsus.staem.exception.IdMismatchException;
-import hr.fer.infsus.staem.mapper.GenericCreateMapper;
+import hr.fer.infsus.staem.mapper.core.GenericCreateMapper;
 import hr.fer.infsus.staem.service.DeveloperCommandService;
 import hr.fer.infsus.staem.service.DeveloperQueryService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,13 +43,15 @@ public class DeveloperController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('developer:create')")
     public DeveloperResponse create(@RequestBody @Valid CreateDeveloperRequest createDeveloperRequest) {
         return genericCreateMapper.map(developerCommandService.create(createDeveloperRequest.getName()),
             DeveloperResponse.class);
     }
 
     @PutMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAuthority('developer:update')")
     public GenreResponse update(@PathVariable("id") Long id,
         @RequestBody @Valid UpdateDeveloperRequest updateDeveloperRequest) {
         if (!id.equals(updateDeveloperRequest.getId())) {
@@ -62,7 +65,8 @@ public class DeveloperController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@PathVariable("id") Long id) {
+    @PreAuthorize("hasAuthority('developer:delete')")
+    public void delete(@PathVariable("id") Long id) {
         developerCommandService.delete(id);
     }
 

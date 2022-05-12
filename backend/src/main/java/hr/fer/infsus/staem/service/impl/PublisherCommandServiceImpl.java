@@ -33,9 +33,6 @@ public class PublisherCommandServiceImpl implements PublisherCommandService {
 
     @Override
     public void delete(Long id) {
-        final Publisher publisher = publisherQueryService.findById(id);
-        publisher.getArticles().forEach(article -> article.removePublisher(publisher));
-
         publisherRepository.deleteById(id);
     }
 

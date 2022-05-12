@@ -34,7 +34,6 @@ public class CategoryCommandServiceImpl implements CategoryCommandService {
     @Override
     public void delete(Long id) {
         final Category category = categoryQueryService.findById(id);
-        category.getArticles().forEach(article -> article.removeCategory(category));
 
         categoryRepository.delete(category);
     }

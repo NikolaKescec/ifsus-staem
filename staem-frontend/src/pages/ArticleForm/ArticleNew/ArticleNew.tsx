@@ -24,7 +24,7 @@ export default function ArticleNew() {
     initialValues: {
       type: "",
       title: "",
-      baseGameId: undefined,
+      baseArticleId: undefined,
       price: undefined,
       description: "",
       releaseDate: "",
@@ -39,7 +39,7 @@ export default function ArticleNew() {
     validate: {
       type: (value) =>
         ["GAME", "DLC"].includes(value) ? undefined : "Type is not valid",
-      baseGameId: (value, values) => {
+      baseArticleId: (value, values) => {
         return values.type === "DLC" && !value
           ? "DLC requires base game"
           : undefined;

@@ -3,12 +3,12 @@ package hr.fer.infsus.staem.service.command.create;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
-public class CreatePictureCommand {
+public class CreateCartCommand {
 
-    private String urlFull;
-
-    private String urlThumbnail;
+    private List<Long> articles;
 
 }

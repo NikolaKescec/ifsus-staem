@@ -61,7 +61,7 @@ export type CategoryResponse = {
 
 export type CreateArticleCommand = {
   type: ArticleType | string;
-  baseGameId: number | undefined;
+  baseArticleId: number | undefined;
   title: string;
   description: string;
   price: number | undefined;

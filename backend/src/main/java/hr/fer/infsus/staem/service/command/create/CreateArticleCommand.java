@@ -1,6 +1,7 @@
 package hr.fer.infsus.staem.service.command.create;
 
 import hr.fer.infsus.staem.entity.ArticleType;
+import hr.fer.infsus.staem.service.command.shared.PictureCommand;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,7 +27,7 @@ public class CreateArticleCommand {
 
     private ArticleType articleType;
 
-    private List<CreateArticleCommand> dlcs;
+    private Long baseArticleId;
 
     private List<Long> publishers;
 
@@ -36,6 +37,6 @@ public class CreateArticleCommand {
 
     private List<Long> genres;
 
-    private List<CreatePictureCommand> pictures;
+    private List<PictureCommand> pictures;
 
 }

@@ -1,5 +1,6 @@
 package hr.fer.infsus.staem.controller.request.create;
 
+import hr.fer.infsus.staem.controller.request.shared.PictureRequest;
 import hr.fer.infsus.staem.entity.ArticleType;
 import hr.fer.infsus.staem.repository.CategoryRepository;
 import hr.fer.infsus.staem.repository.DeveloperRepository;
@@ -47,9 +48,9 @@ public class CreateArticleRequest implements ValidDlcFields {
     private LocalDate releaseDate;
 
     @NotNull(message = "Article type is required")
-    private ArticleType articleType;
+    private ArticleType type;
 
-    private List<CreateArticleRequest> dlcs = new ArrayList<>();
+    private Long baseArticleId;
 
     private List<@EntityExists(repository = PublisherRepository.class, message = "Entity does not exist!") Long>
         publishers = new ArrayList<>();
@@ -63,6 +64,6 @@ public class CreateArticleRequest implements ValidDlcFields {
     private List<@EntityExists(repository = GenreRepository.class, message = "Entity does not exist!") Long> genres =
         new ArrayList<>();
 
-    private List<@Valid CreatePictureRequest> pictures = new ArrayList<>();
+    private List<@Valid PictureRequest> pictures = new ArrayList<>();
 
 }

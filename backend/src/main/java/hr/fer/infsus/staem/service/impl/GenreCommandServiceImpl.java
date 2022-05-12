@@ -33,9 +33,6 @@ public class GenreCommandServiceImpl implements GenreCommandService {
 
     @Override
     public void delete(Long id) {
-        final Genre genre = genreQueryService.findById(id);
-        genre.getArticles().forEach(article -> article.removeGenre(genre));
-
         genreRepository.deleteById(id);
     }
 

@@ -25,6 +25,8 @@ public class ArticleDetailsResponse {
 
     private String articleType;
 
+    private Boolean alreadyBought;
+
     private List<ArticleResponse> dlcs;
 
     private List<PublisherResponse> publishers;
