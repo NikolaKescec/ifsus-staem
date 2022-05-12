@@ -18,6 +18,7 @@ import { IconCircleCheck, IconCircleX, IconDeviceFloppy } from "@tabler/icons";
 
 import * as articleApi from "../../../api/articles";
 import { CreateArticleCommand } from "../../../api/types";
+import ErrorAlert from "../../../components/ErrorAlert";
 import Spinner from "../../../components/Spinner";
 import ArticleForm from "../componetns/ArticleForm";
 import * as actions from "./ArticleUpdate.actions";
@@ -33,6 +34,10 @@ export default function ArticleUpdate() {
   React.useEffect(() => {
     dispatch(actions.findById(Number(id)));
   }, [dispatch, id]);
+
+  if (status === "error") {
+    return <ErrorAlert />;
+  }
 
   if (status !== "success") {
     return <Spinner />;

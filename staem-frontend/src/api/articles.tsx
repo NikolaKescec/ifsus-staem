@@ -20,6 +20,15 @@ export async function findAll(
   return response.json();
 }
 
+// GET /article/bought
+export async function findBought(): Promise<ArticleResponse[]> {
+  const response = await fetch(paths.articles.bought, {
+    headers: getBearerToken(),
+  });
+
+  return response.json();
+}
+
 // GET /article/:id
 export async function findById(id: number): Promise<ArticleDetailsResponse> {
   const response = await fetch(paths.articles.findById(id), {

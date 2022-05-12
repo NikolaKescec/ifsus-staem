@@ -92,8 +92,8 @@ function NavbarLinks() {
       </Text>
       {isAuthenticated && (
         <>
-          <Text component={Link} to="/my-games" color="blue">
-            My Games
+          <Text component={Link} to="/my-articles" color="blue">
+            My Articles
           </Text>
           <Text component={Link} to="/categories" color="blue">
             Categories

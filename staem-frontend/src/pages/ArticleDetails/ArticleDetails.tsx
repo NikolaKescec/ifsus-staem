@@ -31,6 +31,7 @@ import {
 
 import * as cartApi from "../../api/cart";
 import { ArticleResponse } from "../../api/types";
+import ErrorAlert from "../../components/ErrorAlert";
 import ImageCarousel from "../../components/ImageCarousel";
 import Spinner from "../../components/Spinner";
 import PriceDisplay from "../../components/PriceDisplay";
@@ -49,6 +50,10 @@ export default function ArticleDetails() {
   React.useEffect(() => {
     dispatch(actions.findById(Number(id)));
   }, [dispatch, id]);
+
+  if (status === "error") {
+    return <ErrorAlert />;
+  }
 
   if (status !== "success") {
     return <Spinner />;
@@ -87,7 +92,7 @@ function ArticleDisplay() {
         </Grid.Col>
         <Grid.Col span={4}>
           <Stack spacing={10}>
-            <BuyCard />
+            {result!.alreadyBought ? <AlreadyBoughtCard /> : <BuyCard />}
             <InfoCard />
           </Stack>
         </Grid.Col>
@@ -115,6 +120,26 @@ function TitleDisplay() {
   );
 }
 
+function AlreadyBoughtCard() {
+  const result = useSelector(selectors.result);
+
+  return (
+    <Card>
+      <Stack>
+        <Center>
+          <Text weight="bold" mr={5}>
+            Price
+          </Text>
+          <PriceDisplay price={result!.price} currency={result!.currency} />
+        </Center>
+        <Center>
+          <Text weight="bold">Already bought article!</Text>
+        </Center>
+      </Stack>
+    </Card>
+  );
+}
+
 function BuyCard() {
   const dispatch = useAppDispatch();
 
@@ -126,7 +151,7 @@ function BuyCard() {
 
   const onBuy = async () => {
     try {
-      await cartApi.create({ articles: cartItems.map((item) => item.id) });
+      await cartApi.create({ articles: [result!.id] });
 
       showNotification({
         message: "Items successfully purchased",
@@ -135,6 +160,7 @@ function BuyCard() {
       });
 
       dispatch(cartActions.removeItem(result!.id));
+      dispatch(actions.findById(result!.id));
     } catch (error) {
       showNotification({
         message: "Error purchasing items",

@@ -44,6 +44,7 @@ export type ArticleDetailsResponse = {
   pictureUrl: string;
   releaseDate: string;
   articleType: string;
+  alreadyBought: boolean;
   dlcs: ArticleResponse[];
   categories: CategoryResponse[];
   developers: DeveloperResponse[];

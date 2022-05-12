@@ -18,6 +18,7 @@ const api = {
 
 export const articles = {
   create: api.articles,
+  bought: `${api.articles}/bought`,
   findAll: (query: any) => `${api.articles}/?${createQuery(query)}`,
   findById: (id: number) => `${api.articles}/${id}`,
   update: (id: number) => `${api.articles}/${id}`,
