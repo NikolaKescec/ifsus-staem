@@ -42,7 +42,7 @@ public class PublisherController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAuthority('publisher:create')")
+    @PreAuthorize("hasAuthority('create:publisher')")
     public PublisherResponse create(@RequestBody @Valid CreatePublisherRequest createPublisherRequest) {
         return genericCreateMapper.map(publisherCommandService.create(createPublisherRequest.getName()),
             PublisherResponse.class);
@@ -50,7 +50,7 @@ public class PublisherController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('publisher:update')")
+    @PreAuthorize("hasAuthority('update:publisher')")
     public PublisherResponse update(@PathVariable("id") Long id,
         @RequestBody @Valid UpdatePublisherRequest updatePublisherRequest) {
         if (!id.equals(updatePublisherRequest.getId())) {
@@ -64,7 +64,7 @@ public class PublisherController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasAuthority('publisher:delete')")
+    @PreAuthorize("hasAuthority('delete:publisher')")
     public void delete(@PathVariable("id") Long id) {
         publisherCommandService.delete(id);
     }

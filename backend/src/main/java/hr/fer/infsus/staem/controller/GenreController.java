@@ -42,14 +42,14 @@ public class GenreController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAuthority('genre:create')")
+    @PreAuthorize("hasAuthority('create:genre')")
     public GenreResponse create(@RequestBody @Valid CreateGenreRequest createGenreRequest) {
         return genericCreateMapper.map(genreCommandService.create(createGenreRequest.getName()), GenreResponse.class);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('genre:update')")
+    @PreAuthorize("hasAuthority('update:genre')")
     public GenreResponse update(@PathVariable("id") Long id,
         @RequestBody @Valid UpdateGenreRequest updateGenreRequest) {
         if (!id.equals(updateGenreRequest.getId())) {
@@ -63,7 +63,7 @@ public class GenreController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasAuthority('genre:delete')")
+    @PreAuthorize("hasAuthority('delete:genre')")
     public void delete(@PathVariable("id") Long id) {
         genreCommandService.delete(id);
     }

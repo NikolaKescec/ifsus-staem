@@ -27,7 +27,7 @@ public class CartController {
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
-    @PreAuthorize("hasAuthority('cart:create')")
+    @PreAuthorize("hasAuthority('create:cart')")
     public void create(@CurrentSubject String subject, @RequestBody @Valid CreateCartRequest createCartRequest) {
         cartSagaService.create(subject, genericCreateMapper.map(createCartRequest, CreateCartCommand.class));
     }
