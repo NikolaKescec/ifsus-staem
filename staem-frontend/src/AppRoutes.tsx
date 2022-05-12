@@ -7,7 +7,7 @@ import ArticleList from "./pages/ArticleList/ArticleList";
 import CategoryList from "./pages/CategoryList/CategoryList";
 import DeveloperList from "./pages/DeveloperList/DeveloperList";
 import GenreList from "./pages/GenreList/GenreList";
-import MyGames from "./pages/MyGames/MyGames";
+import MyArticles from "./pages/MyArticles/MyArticles";
 import PublisherList from "./pages/PublisherList/PublisherList";
 import NotFound from "./pages/NotFound";
 import Profile from "./pages/Profile";
@@ -19,7 +19,7 @@ export default function AppRoutes() {
       <Route path="/" element={<ArticleList />} />
       <Route path="/article/new" element={<ArticleNew />} />
       <Route element={<PrivateRoute />}>
-        <Route path="/my-games" element={<MyGames />} />
+        <Route path="/my-articles" element={<MyArticles />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/categories" element={<CategoryList />} />
         <Route path="/developers" element={<DeveloperList />} />

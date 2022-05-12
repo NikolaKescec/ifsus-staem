@@ -1,12 +1,14 @@
 import React from "react";
 
+import { AsyncThunk } from "@reduxjs/toolkit";
+import { useSelector } from "react-redux";
+
 import { Button, Group, Mark, Modal, Text } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
 import { IconCheck, IconCircleX } from "@tabler/icons";
 
-import { AsyncThunk } from "@reduxjs/toolkit";
-
-import { UpdateCatalogValues } from "../api/types";
+import { UpdateCatalogValues, UserPermissionType } from "../api/types";
+import * as userSelectors from "../store/shared/user.selectors";
 import { useAppDispatch } from "../store/store";
 
 type DeleteCatalogEntryModalProps = {
@@ -16,6 +18,7 @@ type DeleteCatalogEntryModalProps = {
   item: UpdateCatalogValues;
   deleteFunction: (id: number) => Promise<void>;
   dispatchAction: AsyncThunk<any[], void, {}>;
+  permission: UserPermissionType;
 };
 
 export default function DeleteCatalogEntryModal({
@@ -25,8 +28,10 @@ export default function DeleteCatalogEntryModal({
   item,
   deleteFunction,
   dispatchAction,
+  permission,
 }: DeleteCatalogEntryModalProps) {
   const dispatch = useAppDispatch();
+  const userPermissions = useSelector(userSelectors.permissions);
 
   const onDelete = async () => {
     setModalOpen(false);
@@ -51,6 +56,10 @@ export default function DeleteCatalogEntryModal({
       });
     }
   };
+
+  if (!userPermissions.includes(permission)) {
+    return null;
+  }
 
   return (
     <Modal

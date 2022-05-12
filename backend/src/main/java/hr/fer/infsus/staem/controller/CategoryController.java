@@ -42,7 +42,7 @@ public class CategoryController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAuthority('category:create')")
+    @PreAuthorize("hasAuthority('create:category')")
     public CategoryResponse create(@RequestBody @Valid CreateCategoryRequest createCategoryRequest) {
         return genericCreateMapper.map(
             categoryCommandService.create(createCategoryRequest.getName()), CategoryResponse.class);
@@ -50,7 +50,7 @@ public class CategoryController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('category:update')")
+    @PreAuthorize("hasAuthority('update:category')")
     public CategoryResponse update(@PathVariable("id") Long id,
         @RequestBody @Valid UpdateCategoryRequest updateCategoryRequest) {
         if (!id.equals(updateCategoryRequest.getId())) {
@@ -64,7 +64,7 @@ public class CategoryController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasAuthority('category:delete')")
+    @PreAuthorize("hasAuthority('delete:category')")
     public void delete(@PathVariable("id") Long id) {
         categoryCommandService.delete(id);
     }

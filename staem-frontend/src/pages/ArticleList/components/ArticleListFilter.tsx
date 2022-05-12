@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 import {
+  Box,
   Button,
   Grid,
   Group,
@@ -24,6 +25,7 @@ import * as categorySelectors from "../../../store/shared/category.selectors";
 import * as developerSelectors from "../../../store/shared/developer.selectors";
 import * as genreSelectors from "../../../store/shared/genre.selectors";
 import * as publisherSelectors from "../../../store/shared/publisher.selectors";
+import * as userSelectors from "../../../store/shared/user.selectors";
 import { useAppDispatch } from "../../../store/store";
 import { mapDataToSelectItems } from "../../../util/selectUtils";
 
@@ -35,6 +37,7 @@ export default function ArticleListFilter() {
   const developers = useSelector(developerSelectors.result);
   const genres = useSelector(genreSelectors.result);
   const publishers = useSelector(publisherSelectors.result);
+  const userPermissions = useSelector(userSelectors.permissions);
 
   const form = useForm({
     initialValues: filter,
@@ -111,15 +114,19 @@ export default function ArticleListFilter() {
           </Grid.Col>
         </Grid>
         <Group position="apart" mt="xl">
-          <Button
-            type="button"
-            component={Link}
-            to="/article/new"
-            leftIcon={<IconCirclePlus />}
-          >
-            Create new article
-          </Button>
-          <Group>
+          {userPermissions.includes("create:article") ? (
+            <Button
+              type="button"
+              component={Link}
+              to="/article/new"
+              leftIcon={<IconCirclePlus />}
+            >
+              Create new article
+            </Button>
+          ) : (
+            <Box></Box>
+          )}
+          <Group position="right">
             <Button
               type="button"
               color="red"

@@ -1,5 +1,6 @@
 import React from "react";
 
+import { Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 import {
@@ -21,9 +22,11 @@ import DeleteCatalogEntryModal from "../../components/DeleteCatalogEntryModal";
 import UpdateCatalogEntryModal from "../../components/UpdateCatalogEntryModal";
 import * as actions from "../../store/shared/category.actions";
 import * as selectors from "../../store/shared/category.selectors";
+import * as userSelectors from "../../store/shared/user.selectors";
 
 export default function CategoryList() {
   const result = useSelector(selectors.result);
+  const userPermissions = useSelector(userSelectors.permissions);
 
   const [modalCategory, setModalCategory] =
     React.useState<CategoryResponse | null>(null);
@@ -51,12 +54,17 @@ export default function CategoryList() {
     setUpdateModal(true);
   };
 
+  if (!userPermissions.includes("create:publisher")) {
+    return <Navigate to="/" />;
+  }
+
   return (
     <Container size="md">
       <CreateNewCatalogEntry
         title="category"
         createFunction={api.create}
         dispatchAction={actions.findAll}
+        permission="create:category"
       />
       <Paper p={10} my={20}>
         <Table
@@ -73,8 +81,8 @@ export default function CategoryList() {
           <tbody>
             {categories.map((category: CategoryResponse) => {
               if (
-                page * pageSize - pageSize <= category.id &&
-                category.id < page * pageSize
+                page * pageSize - pageSize < category.id &&
+                category.id <= page * pageSize
               ) {
                 return (
                   <tr key={category.id}>
@@ -108,6 +116,7 @@ export default function CategoryList() {
           item={modalCategory}
           updateFunction={api.update}
           dispatchAction={actions.findAll}
+          permission="update:category"
         />
       )}
 
@@ -119,6 +128,7 @@ export default function CategoryList() {
           item={modalCategory}
           deleteFunction={api.deleteCategory}
           dispatchAction={actions.findAll}
+          permission="delete:category"
         />
       )}
 

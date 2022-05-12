@@ -31,7 +31,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/article")
@@ -63,16 +62,16 @@ public class ArticleController {
 
     @GetMapping("/bought")
     @ResponseStatus(value = HttpStatus.OK)
-    @PreAuthorize("hasAuthority('article:read_bought')")
+    @PreAuthorize("hasAuthority('read:article-bought')")
     public List<ArticleResponse> findBought(@CurrentSubject String currentSubject) {
         return genericCreateMapper.mapToList(
             purchasedArticleQueryService.findBought(currentSubject).stream().map(PurchasedArticles::getArticle)
-                .collect(Collectors.toList()), ArticleResponse.class);
+                .toList(), ArticleResponse.class);
     }
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
-    @PreAuthorize("hasAuthority('article:create')")
+    @PreAuthorize("hasAuthority('create:article')")
     public ArticleDetailsResponse create(@RequestBody @Valid CreateArticleRequest createArticleRequest) {
         return genericCreateMapper.map(
             articleCommandService.create(genericCreateMapper.map(createArticleRequest, CreateArticleCommand.class)),
@@ -81,7 +80,7 @@ public class ArticleController {
 
     @PutMapping("/{id}")
     @ResponseStatus(value = HttpStatus.OK)
-    @PreAuthorize("hasAuthority('article:update')")
+    @PreAuthorize("hasAuthority('update:article')")
     public ArticleDetailsResponse update(@PathVariable("id") Long id,
         @RequestBody @Valid UpdateArticleRequest updateArticleRequest) {
         final UpdateArticleCommand updateArticleCommand =
@@ -94,7 +93,7 @@ public class ArticleController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasAuthority('article:delete')")
+    @PreAuthorize("hasAuthority('delete:article')")
     public void delete(@PathVariable("id") Long id) {
         articleCommandService.delete(id);
     }

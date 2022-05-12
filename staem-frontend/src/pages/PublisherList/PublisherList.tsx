@@ -1,5 +1,6 @@
 import React from "react";
 
+import { Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 import {
@@ -21,9 +22,11 @@ import DeleteCatalogEntryModal from "../../components/DeleteCatalogEntryModal";
 import UpdateCatalogEntryModal from "../../components/UpdateCatalogEntryModal";
 import * as actions from "../../store/shared/publisher.actions";
 import * as selectors from "../../store/shared/publisher.selectors";
+import * as userSelectors from "../../store/shared/user.selectors";
 
 export default function PublisherList() {
   const result = useSelector(selectors.result);
+  const userPermissions = useSelector(userSelectors.permissions);
 
   const [modalPublisher, setModalPublisher] =
     React.useState<PublisherResponse | null>(null);
@@ -51,12 +54,17 @@ export default function PublisherList() {
     setUpdateModal(true);
   };
 
+  if (!userPermissions.includes("create:publisher")) {
+    return <Navigate to="/" />;
+  }
+
   return (
     <Container size="md">
       <CreateNewCatalogEntry
         title="publisher"
         createFunction={api.create}
         dispatchAction={actions.findAll}
+        permission="create:publisher"
       />
       <Paper p={10} my={20}>
         <Table
@@ -73,8 +81,8 @@ export default function PublisherList() {
           <tbody>
             {publishers.map((publisher: PublisherResponse) => {
               if (
-                page * pageSize - pageSize <= publisher.id &&
-                publisher.id < page * pageSize
+                page * pageSize - pageSize < publisher.id &&
+                publisher.id <= page * pageSize
               ) {
                 return (
                   <tr key={publisher.id}>
@@ -108,6 +116,7 @@ export default function PublisherList() {
           item={modalPublisher}
           updateFunction={api.update}
           dispatchAction={actions.findAll}
+          permission="update:publisher"
         />
       )}
 
@@ -119,6 +128,7 @@ export default function PublisherList() {
           item={modalPublisher}
           deleteFunction={api.deletePublisher}
           dispatchAction={actions.findAll}
+          permission="delete:publisher"
         />
       )}
 

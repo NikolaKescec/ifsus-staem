@@ -16,6 +16,7 @@ import {
 } from "@mantine/core";
 
 import { ArticleResponse } from "../../../api/types";
+import ErrorAlert from "../../../components/ErrorAlert";
 import PriceDisplay from "../../../components/PriceDisplay";
 import Spinner from "../../../components/Spinner";
 import * as selectors from "../ArticleList.selectors";
@@ -44,6 +45,10 @@ export default function ArticleListResult() {
   const onPageChange = (pageNumber: number) => {
     dispatch(actions.page(pageNumber));
   };
+
+  if (status === "error") {
+    return <ErrorAlert />;
+  }
 
   if (status !== "success") {
     return <Spinner />;

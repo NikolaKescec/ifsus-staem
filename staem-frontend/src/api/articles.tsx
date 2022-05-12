@@ -20,6 +20,15 @@ export async function findAll(
   return response.json();
 }
 
+// GET /article/bought
+export async function findBought(): Promise<ArticleResponse[]> {
+  const response = await fetch(paths.articles.bought, {
+    headers: getBearerToken(),
+  });
+
+  return response.json();
+}
+
 // GET /article/:id
 export async function findById(id: number): Promise<ArticleDetailsResponse> {
   const response = await fetch(paths.articles.findById(id), {
@@ -64,4 +73,17 @@ export async function update(
   }
 
   return response.json();
+}
+
+// DELETE /article/:id
+export async function deleteArticle(id: number): Promise<void> {
+  const response = await fetch(paths.articles.delete(id), {
+    method: "DELETE",
+    headers: getBearerToken(),
+  });
+
+  if (response.status === 400) {
+    const data = await response.json();
+    throw new ValidationError(transformErrors(data));
+  }
 }

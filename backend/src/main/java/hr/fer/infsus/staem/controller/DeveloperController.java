@@ -43,7 +43,7 @@ public class DeveloperController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAuthority('developer:create')")
+    @PreAuthorize("hasAuthority('create:developer')")
     public DeveloperResponse create(@RequestBody @Valid CreateDeveloperRequest createDeveloperRequest) {
         return genericCreateMapper.map(developerCommandService.create(createDeveloperRequest.getName()),
             DeveloperResponse.class);
@@ -51,7 +51,7 @@ public class DeveloperController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('developer:update')")
+    @PreAuthorize("hasAuthority('update:developer')")
     public GenreResponse update(@PathVariable("id") Long id,
         @RequestBody @Valid UpdateDeveloperRequest updateDeveloperRequest) {
         if (!id.equals(updateDeveloperRequest.getId())) {
@@ -65,7 +65,7 @@ public class DeveloperController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasAuthority('developer:delete')")
+    @PreAuthorize("hasAuthority('delete:developer')")
     public void delete(@PathVariable("id") Long id) {
         developerCommandService.delete(id);
     }

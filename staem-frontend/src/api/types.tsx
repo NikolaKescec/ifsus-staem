@@ -44,6 +44,7 @@ export type ArticleDetailsResponse = {
   pictureUrl: string;
   releaseDate: string;
   articleType: string;
+  alreadyBought: boolean;
   dlcs: ArticleResponse[];
   categories: CategoryResponse[];
   developers: DeveloperResponse[];
@@ -73,6 +74,10 @@ export type CreateArticleCommand = {
   genres: string[];
   publishers: string[];
   pictures: CreatePictureCommand[];
+};
+
+export type CreateCartCommand = {
+  articles: number[];
 };
 
 export type CreatePictureCommand = {
@@ -172,3 +177,23 @@ export type DataValues = {
   value: string;
   label: string;
 };
+
+export type UserPermissionType =
+  | "create:article"
+  | "update:article"
+  | "delete:article"
+  | "read:article-bought"
+  | "create:cart"
+  | "create:category"
+  | "update:category"
+  | "delete:category"
+  | "create:developer"
+  | "update:developer"
+  | "delete:developer"
+  | "create:genre"
+  | "update:genre"
+  | "delete:genre"
+  | "create:publisher"
+  | "update:publisher"
+  | "delete:publisher"
+  | "buy:article";
