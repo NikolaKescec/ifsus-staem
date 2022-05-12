@@ -65,7 +65,7 @@ public class Article {
     @JoinColumn(name = "id_base_article", foreignKey = @ForeignKey(name = "id_base_article"))
     private Article baseArticle;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
     @JoinColumn(name = "id_base_article", foreignKey = @ForeignKey(name = "id_base_article"))
     private List<Article> dlcs = new ArrayList<>();
 

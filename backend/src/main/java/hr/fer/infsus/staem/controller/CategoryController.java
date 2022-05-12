@@ -4,11 +4,12 @@ import hr.fer.infsus.staem.controller.request.create.CreateCategoryRequest;
 import hr.fer.infsus.staem.controller.request.update.UpdateCategoryRequest;
 import hr.fer.infsus.staem.controller.response.CategoryResponse;
 import hr.fer.infsus.staem.exception.IdMismatchException;
-import hr.fer.infsus.staem.mapper.GenericCreateMapper;
+import hr.fer.infsus.staem.mapper.core.GenericCreateMapper;
 import hr.fer.infsus.staem.service.CategoryCommandService;
 import hr.fer.infsus.staem.service.CategoryQueryService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,13 +42,15 @@ public class CategoryController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('category:create')")
     public CategoryResponse create(@RequestBody @Valid CreateCategoryRequest createCategoryRequest) {
         return genericCreateMapper.map(
             categoryCommandService.create(createCategoryRequest.getName()), CategoryResponse.class);
     }
 
     @PutMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAuthority('category:update')")
     public CategoryResponse update(@PathVariable("id") Long id,
         @RequestBody @Valid UpdateCategoryRequest updateCategoryRequest) {
         if (!id.equals(updateCategoryRequest.getId())) {
@@ -61,7 +64,8 @@ public class CategoryController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@PathVariable("id") Long id) {
+    @PreAuthorize("hasAuthority('category:delete')")
+    public void delete(@PathVariable("id") Long id) {
         categoryCommandService.delete(id);
     }
 

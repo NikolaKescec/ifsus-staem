@@ -2,6 +2,8 @@ package hr.fer.infsus.staem.mapper;
 
 import hr.fer.infsus.staem.entity.Article;
 import hr.fer.infsus.staem.entity.ArticleType;
+import hr.fer.infsus.staem.mapper.core.CreateMapper;
+import hr.fer.infsus.staem.mapper.core.GenericCreateMapper;
 import hr.fer.infsus.staem.service.ArticleQueryService;
 import hr.fer.infsus.staem.service.CategoryQueryService;
 import hr.fer.infsus.staem.service.DeveloperQueryService;

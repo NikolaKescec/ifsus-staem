@@ -48,7 +48,7 @@ public class CreateArticleRequest implements ValidDlcFields {
     private LocalDate releaseDate;
 
     @NotNull(message = "Article type is required")
-    private ArticleType articleType;
+    private ArticleType type;
 
     private Long baseArticleId;
 

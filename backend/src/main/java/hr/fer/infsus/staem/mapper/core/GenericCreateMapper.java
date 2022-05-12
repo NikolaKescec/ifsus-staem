@@ -1,4 +1,4 @@
-package hr.fer.infsus.staem.mapper;
+package hr.fer.infsus.staem.mapper.core;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;

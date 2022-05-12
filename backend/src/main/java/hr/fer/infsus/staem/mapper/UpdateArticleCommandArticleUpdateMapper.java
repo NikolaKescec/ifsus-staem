@@ -6,6 +6,8 @@ import hr.fer.infsus.staem.entity.Category;
 import hr.fer.infsus.staem.entity.Developer;
 import hr.fer.infsus.staem.entity.Genre;
 import hr.fer.infsus.staem.entity.Publisher;
+import hr.fer.infsus.staem.mapper.core.GenericUpdateMapper;
+import hr.fer.infsus.staem.mapper.core.UpdateMapper;
 import hr.fer.infsus.staem.service.ArticleQueryService;
 import hr.fer.infsus.staem.service.CategoryQueryService;
 import hr.fer.infsus.staem.service.DeveloperQueryService;

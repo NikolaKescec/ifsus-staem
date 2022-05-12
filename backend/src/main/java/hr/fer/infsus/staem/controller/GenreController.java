@@ -4,11 +4,12 @@ import hr.fer.infsus.staem.controller.request.create.CreateGenreRequest;
 import hr.fer.infsus.staem.controller.request.update.UpdateGenreRequest;
 import hr.fer.infsus.staem.controller.response.GenreResponse;
 import hr.fer.infsus.staem.exception.IdMismatchException;
-import hr.fer.infsus.staem.mapper.GenericCreateMapper;
+import hr.fer.infsus.staem.mapper.core.GenericCreateMapper;
 import hr.fer.infsus.staem.service.GenreCommandService;
 import hr.fer.infsus.staem.service.GenreQueryService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,12 +42,14 @@ public class GenreController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('genre:create')")
     public GenreResponse create(@RequestBody @Valid CreateGenreRequest createGenreRequest) {
         return genericCreateMapper.map(genreCommandService.create(createGenreRequest.getName()), GenreResponse.class);
     }
 
     @PutMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAuthority('genre:update')")
     public GenreResponse update(@PathVariable("id") Long id,
         @RequestBody @Valid UpdateGenreRequest updateGenreRequest) {
         if (!id.equals(updateGenreRequest.getId())) {
@@ -60,7 +63,8 @@ public class GenreController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@PathVariable("id") Long id) {
+    @PreAuthorize("hasAuthority('genre:delete')")
+    public void delete(@PathVariable("id") Long id) {
         genreCommandService.delete(id);
     }
 

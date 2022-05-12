@@ -1,4 +1,4 @@
-package hr.fer.infsus.staem.mapper;
+package hr.fer.infsus.staem.mapper.core;
 
 public interface GenericUpdateMapper {
 

@@ -95,21 +95,11 @@ CREATE TABLE Article_Genre
   FOREIGN KEY (id_article) REFERENCES Article(id)
 );
 
-CREATE TABLE Role
-(
-  id BIGSERIAL NOT NULL,
-  name VARCHAR(50) NOT NULL,
-  is_deleted BOOLEAN NOT NULL DEFAULT false,
-  PRIMARY KEY (id)
-);
-
 CREATE TABLE Users
 (
   id VARCHAR(255) NOT NULL,
-  id_role BIGINT NOT NULL,
   is_deleted BOOLEAN NOT NULL DEFAULT false,
-  PRIMARY KEY (id),
-  FOREIGN KEY (id_role) REFERENCES Role(id)
+  PRIMARY KEY (id)
 );
 
 CREATE TABLE Cart

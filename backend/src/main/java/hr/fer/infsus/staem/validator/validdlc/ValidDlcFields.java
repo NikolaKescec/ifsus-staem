@@ -4,7 +4,7 @@ import hr.fer.infsus.staem.entity.ArticleType;
 
 public interface ValidDlcFields {
 
-    ArticleType getArticleType();
+    ArticleType getType();
 
     Long getBaseArticleId();
 

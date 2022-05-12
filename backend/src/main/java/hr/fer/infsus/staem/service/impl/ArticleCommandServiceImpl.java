@@ -2,8 +2,8 @@ package hr.fer.infsus.staem.service.impl;
 
 import hr.fer.infsus.staem.entity.Article;
 import hr.fer.infsus.staem.entity.ArticleType;
-import hr.fer.infsus.staem.mapper.CreateMapper;
-import hr.fer.infsus.staem.mapper.UpdateMapper;
+import hr.fer.infsus.staem.mapper.core.CreateMapper;
+import hr.fer.infsus.staem.mapper.core.UpdateMapper;
 import hr.fer.infsus.staem.repository.ArticleRepository;
 import hr.fer.infsus.staem.service.ArticleCommandService;
 import hr.fer.infsus.staem.service.ArticleQueryService;
@@ -50,6 +50,7 @@ public class ArticleCommandServiceImpl implements ArticleCommandService {
         if (article.getArticleType() == ArticleType.DLC) {
             final List<Article> dlcs = article.getBaseArticle().getDlcs();
             dlcs.remove(article);
+
             article.getBaseArticle().setDlcs(dlcs);
             article.setBaseArticle(null);
         }
