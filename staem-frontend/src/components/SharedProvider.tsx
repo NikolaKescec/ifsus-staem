@@ -5,11 +5,13 @@ import { useSelector } from "react-redux";
 import { Center, LoadingOverlay } from "@mantine/core";
 
 import { useAuth0 } from "@auth0/auth0-react";
+import jwt from "jwt-decode";
 
 import * as categoryActions from "../store/shared/category.actions";
 import * as developerActions from "../store/shared/developer.actions";
 import * as genreActions from "../store/shared/genre.actions";
 import * as publisherActions from "../store/shared/publisher.actions";
+import * as userActions from "../store/shared/user.actions";
 import * as categorySelectors from "../store/shared/category.selectors";
 import * as developerSelectors from "../store/shared/developer.selectors";
 import * as genreSelectors from "../store/shared/genre.selectors";
@@ -39,6 +41,10 @@ export default function SharedProvider({
       const token = await getAccessTokenSilently();
       localStorage.setItem("access_token", token);
       setFetchedToken(token);
+
+      const decodedToken: any = jwt(token);
+      const permissions = decodedToken["permissions"] || [];
+      dispatch(userActions.setPermissions(permissions));
     };
 
     if (isAuthenticated) {

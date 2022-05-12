@@ -1,5 +1,6 @@
 import React from "react";
 
+import { Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 import {
@@ -21,9 +22,11 @@ import DeleteCatalogEntryModal from "../../components/DeleteCatalogEntryModal";
 import UpdateCatalogEntryModal from "../../components/UpdateCatalogEntryModal";
 import * as actions from "../../store/shared/developer.actions";
 import * as selectors from "../../store/shared/developer.selectors";
+import * as userSelectors from "../../store/shared/user.selectors";
 
 export default function DeveloperList() {
   const result = useSelector(selectors.result);
+  const userPermissions = useSelector(userSelectors.permissions);
 
   const [modalDeveloper, setModalDeveloper] =
     React.useState<DeveloperResponse | null>(null);
@@ -51,12 +54,17 @@ export default function DeveloperList() {
     setUpdateModal(true);
   };
 
+  if (!userPermissions.includes("create:developer")) {
+    return <Navigate to="/" />;
+  }
+
   return (
     <Container size="md">
       <CreateNewCatalogEntry
         title="developer"
         createFunction={api.create}
         dispatchAction={actions.findAll}
+        permission="create:developer"
       />
       <Paper p={10} my={20}>
         <Table
@@ -108,6 +116,7 @@ export default function DeveloperList() {
           item={modalDeveloper}
           updateFunction={api.update}
           dispatchAction={actions.findAll}
+          permission="update:developer"
         />
       )}
 
@@ -119,6 +128,7 @@ export default function DeveloperList() {
           item={modalDeveloper}
           deleteFunction={api.deleteDeveloper}
           dispatchAction={actions.findAll}
+          permission="delete:developer"
         />
       )}
 

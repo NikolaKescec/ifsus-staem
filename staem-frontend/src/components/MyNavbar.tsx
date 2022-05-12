@@ -1,5 +1,8 @@
 import React from "react";
 
+import { Link, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+
 import {
   ActionIcon,
   Avatar,
@@ -18,12 +21,11 @@ import {
   IconUser,
 } from "@tabler/icons";
 
-import { Link, useNavigate } from "react-router-dom";
-
 import { useAuth0 } from "@auth0/auth0-react";
 
 import CartDrawer from "./CartDrawer";
 import LoginButton from "./LoginButton";
+import * as userSelectors from "../store/shared/user.selectors";
 
 export default function MyNavbar() {
   return (
@@ -45,6 +47,11 @@ export default function MyNavbar() {
 
 function CartToggle() {
   const [cartDrawerOpen, setCartDrawerOpen] = React.useState(false);
+  const userPermissions = useSelector(userSelectors.permissions);
+
+  if (!userPermissions.includes("buy:article")) {
+    return null;
+  }
 
   return (
     <>
@@ -84,6 +91,7 @@ function ThemeToggle() {
 
 function NavbarLinks() {
   const { isAuthenticated } = useAuth0();
+  const userPermissions = useSelector(userSelectors.permissions);
 
   return (
     <>
@@ -92,21 +100,31 @@ function NavbarLinks() {
       </Text>
       {isAuthenticated && (
         <>
-          <Text component={Link} to="/my-articles" color="blue">
-            My Articles
-          </Text>
-          <Text component={Link} to="/categories" color="blue">
-            Categories
-          </Text>
-          <Text component={Link} to="/developers" color="blue">
-            Developers
-          </Text>
-          <Text component={Link} to="/genres" color="blue">
-            Genres
-          </Text>
-          <Text component={Link} to="/publishers" color="blue">
-            Publishers
-          </Text>
+          {userPermissions.includes("buy:article") && (
+            <Text component={Link} to="/my-articles" color="blue">
+              My Articles
+            </Text>
+          )}
+          {userPermissions.includes("create:category") && (
+            <Text component={Link} to="/categories" color="blue">
+              Categories
+            </Text>
+          )}
+          {userPermissions.includes("create:developer") && (
+            <Text component={Link} to="/developers" color="blue">
+              Developers
+            </Text>
+          )}
+          {userPermissions.includes("create:genre") && (
+            <Text component={Link} to="/genres" color="blue">
+              Genres
+            </Text>
+          )}
+          {userPermissions.includes("create:publisher") && (
+            <Text component={Link} to="/publishers" color="blue">
+              Publishers
+            </Text>
+          )}
         </>
       )}
     </>

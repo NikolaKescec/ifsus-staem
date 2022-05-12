@@ -1,6 +1,6 @@
 import React from "react";
 
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 import {
@@ -18,21 +18,28 @@ import {
 } from "@mantine/core";
 import { usePagination } from "@mantine/hooks";
 
+import { ArticleResponse } from "../../api/types";
 import ErrorAlert from "../../components/ErrorAlert";
 import Spinner from "../../components/Spinner";
 import PriceDisplay from "../../components/PriceDisplay";
 import * as actions from "./MyArticles.actions";
 import * as selectors from "./MyArticles.selectors";
+import * as userSelectors from "../../store/shared/user.selectors";
 import { useAppDispatch } from "../../store/store";
-import { ArticleResponse } from "../../api/types";
 
 export default function MyArticles() {
   const dispatch = useAppDispatch();
+
   const status = useSelector(selectors.status);
+  const userPermissions = useSelector(userSelectors.permissions);
 
   React.useEffect(() => {
     dispatch(actions.findArticles());
   }, [dispatch]);
+
+  if (!userPermissions.includes("buy:article")) {
+    return <Navigate to="/" />;
+  }
 
   if (status === "error") {
     return <ErrorAlert />;

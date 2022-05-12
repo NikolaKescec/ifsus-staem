@@ -1,6 +1,6 @@
 import React from "react";
 
-import { useNavigate, useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 import {
@@ -23,6 +23,7 @@ import Spinner from "../../../components/Spinner";
 import ArticleForm from "../componetns/ArticleForm";
 import * as actions from "./ArticleUpdate.actions";
 import * as selectors from "./ArticleUpdate.selectors";
+import * as userSelectors from "../../../store/shared/user.selectors";
 import { useAppDispatch } from "../../../store/store";
 
 export default function ArticleUpdate() {
@@ -30,10 +31,15 @@ export default function ArticleUpdate() {
   const dispatch = useAppDispatch();
 
   const status = useSelector(selectors.status);
+  const userPermissions = useSelector(userSelectors.permissions);
 
   React.useEffect(() => {
     dispatch(actions.findById(Number(id)));
   }, [dispatch, id]);
+
+  if (!userPermissions.includes("update:article")) {
+    return <Navigate to="/" />;
+  }
 
   if (status === "error") {
     return <ErrorAlert />;

@@ -1,5 +1,6 @@
 import React from "react";
 
+import { Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 import {
@@ -19,11 +20,13 @@ import { GenreResponse } from "../../api/types";
 import CreateNewCatalogEntry from "../../components/CreateNewCatalogEntry";
 import * as actions from "../../store/shared/genre.actions";
 import * as selectors from "../../store/shared/genre.selectors";
+import * as userSelectors from "../../store/shared/user.selectors";
 import UpdateCatalogEntryModal from "../../components/UpdateCatalogEntryModal";
 import DeleteCatalogEntryModal from "../../components/DeleteCatalogEntryModal";
 
 export default function GenreList() {
   const result = useSelector(selectors.result);
+  const userPermissions = useSelector(userSelectors.permissions);
 
   const [modalGenre, setModalGenre] = React.useState<GenreResponse | null>(
     null
@@ -52,12 +55,17 @@ export default function GenreList() {
     setUpdateModal(true);
   };
 
+  if (!userPermissions.includes("create:genre")) {
+    return <Navigate to="/" />;
+  }
+
   return (
     <Container size="md">
       <CreateNewCatalogEntry
         title="genre"
         createFunction={api.create}
         dispatchAction={actions.findAll}
+        permission="create:genre"
       />
       <Paper p={10} my={20}>
         <Table
@@ -109,6 +117,7 @@ export default function GenreList() {
           item={modalGenre}
           updateFunction={api.update}
           dispatchAction={actions.findAll}
+          permission="update:genre"
         />
       )}
 
@@ -120,6 +129,7 @@ export default function GenreList() {
           item={modalGenre}
           deleteFunction={api.deleteGenre}
           dispatchAction={actions.findAll}
+          permission="delete:genre"
         />
       )}
 

@@ -9,6 +9,7 @@ import { category } from "./shared/category";
 import { developer } from "./shared/developer";
 import { genre } from "./shared/genre";
 import { publisher } from "./shared/publisher";
+import { user } from "./shared/user";
 
 const pageReducers = { articleList, articleDetails, articleUpdate, myArticles };
 
@@ -18,6 +19,7 @@ const sharedReducers = {
   developer,
   genre,
   publisher,
+  user,
 };
 
 export const rootReducer = combineReducers({

@@ -1,17 +1,22 @@
 import React from "react";
 
+import { AsyncThunk } from "@reduxjs/toolkit";
+import { useSelector } from "react-redux";
+
 import { Button, Grid, Paper, Space, Text, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
 import { IconCheck, IconCirclePlus, IconCircleX } from "@tabler/icons";
 
-import { AsyncThunk } from "@reduxjs/toolkit";
+import { UserPermissionType } from "../api/types";
+import * as userSelectors from "../store/shared/user.selectors";
 import { useAppDispatch } from "../store/store";
 
 type CreateNewCatalogEntryProps = {
   title: string;
   createFunction: (name: string) => Promise<void>;
   dispatchAction: AsyncThunk<any[], void, {}>;
+  permission: UserPermissionType;
 };
 
 type NewForm = {
@@ -22,8 +27,10 @@ export default function CreateNewCatalogEntry({
   title,
   createFunction,
   dispatchAction,
+  permission,
 }: CreateNewCatalogEntryProps) {
   const dispatch = useAppDispatch();
+  const userPermissions = useSelector(userSelectors.permissions);
 
   const form = useForm({
     initialValues: {
@@ -56,6 +63,10 @@ export default function CreateNewCatalogEntry({
       });
     }
   };
+
+  if (!userPermissions.includes(permission)) {
+    return null;
+  }
 
   return (
     <Paper p={20}>

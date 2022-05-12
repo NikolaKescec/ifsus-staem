@@ -14,6 +14,8 @@ import {
   Grid,
   Group,
   Image,
+  Mark,
+  Modal,
   Paper,
   Spoiler,
   Stack,
@@ -27,8 +29,10 @@ import {
   IconCreditCard,
   IconEdit,
   IconShoppingCartPlus,
+  IconTrash,
 } from "@tabler/icons";
 
+import * as articlesApi from "../../api/articles";
 import * as cartApi from "../../api/cart";
 import { ArticleResponse } from "../../api/types";
 import ErrorAlert from "../../components/ErrorAlert";
@@ -39,6 +43,7 @@ import * as actions from "./ArticleDetails.actions";
 import * as selectors from "./ArticleDetails.selectors";
 import * as cartActions from "../../store/shared/cart.actions";
 import * as cartSelectors from "../../store/shared/cart.selectors";
+import * as userSelectors from "../../store/shared/user.selectors";
 import { useAppDispatch } from "../../store/store";
 
 export default function ArticleDetails() {
@@ -73,9 +78,7 @@ function ArticleDisplay() {
     <Stack>
       <Group position="apart">
         <Group>
-          <ActionIcon component={Link} to={`/article/${result!.id}/update`}>
-            <IconEdit color="yellow" />
-          </ActionIcon>
+          <EditActions />
           <TitleDisplay />
         </Group>
         <NameDisplay genres={result!.genres} />
@@ -99,6 +102,70 @@ function ArticleDisplay() {
       </Grid>
       <DlcCard />
     </Stack>
+  );
+}
+
+function EditActions() {
+  const navigate = useNavigate();
+
+  const result = useSelector(selectors.result);
+  const userPermissions = useSelector(userSelectors.permissions);
+
+  const [deleleteModal, setDeleteModal] = React.useState(false);
+
+  const onDelete = async () => {
+    setDeleteModal(false);
+
+    try {
+      await articlesApi.deleteArticle(result!.id);
+
+      showNotification({
+        title: "Success",
+        message: "Article deleted",
+        color: "green",
+        icon: <IconCircleCheck />,
+      });
+
+      navigate("/");
+    } catch (error) {
+      showNotification({
+        title: "Error",
+        message: "Something went wrong",
+        color: "red",
+        icon: <IconCircleX />,
+      });
+    }
+  };
+
+  return (
+    <>
+      {userPermissions.includes("update:article") && (
+        <ActionIcon component={Link} to={`/article/${result!.id}/update`}>
+          <IconEdit color="yellow" />
+        </ActionIcon>
+      )}
+      {userPermissions.includes("delete:article") && (
+        <ActionIcon onClick={() => setDeleteModal(true)}>
+          <IconTrash color="red" />
+        </ActionIcon>
+      )}
+      <Modal opened={deleleteModal} onClose={() => setDeleteModal(false)}>
+        <Text>
+          Are you sure you want to delete{" "}
+          <Mark color="gray" px={5} py={2}>
+            {result!.title}
+          </Mark>
+        </Text>
+        <Group position="right" py={20}>
+          <Button color="blue" onClick={() => setDeleteModal(false)}>
+            Close
+          </Button>
+          <Button color="red" onClick={onDelete}>
+            Delete
+          </Button>
+        </Group>
+      </Modal>
+    </>
   );
 }
 
@@ -145,6 +212,7 @@ function BuyCard() {
 
   const result = useSelector(selectors.result);
   const cartItems = useSelector(cartSelectors.items);
+  const userPermissions = useSelector(userSelectors.permissions);
 
   const itemExistsInCart: boolean =
     cartItems.filter((item) => item.id === result!.id).length > 0;
@@ -189,18 +257,26 @@ function BuyCard() {
           </Text>
           <PriceDisplay price={result!.price} currency={result!.currency} />
         </Center>
-        <Button fullWidth={true} onClick={onBuy} rightIcon={<IconCreditCard />}>
-          Buy
-        </Button>
-        <Button
-          fullWidth={true}
-          color="orange"
-          onClick={onAddToCart}
-          rightIcon={<IconShoppingCartPlus />}
-          disabled={itemExistsInCart}
-        >
-          Add to Cart
-        </Button>
+        {userPermissions.includes("buy:article") && (
+          <>
+            <Button
+              fullWidth={true}
+              onClick={onBuy}
+              rightIcon={<IconCreditCard />}
+            >
+              Buy
+            </Button>
+            <Button
+              fullWidth={true}
+              color="orange"
+              onClick={onAddToCart}
+              rightIcon={<IconShoppingCartPlus />}
+              disabled={itemExistsInCart}
+            >
+              Add to Cart
+            </Button>
+          </>
+        )}
       </Stack>
     </Card>
   );

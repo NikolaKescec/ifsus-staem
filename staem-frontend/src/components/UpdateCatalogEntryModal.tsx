@@ -1,13 +1,15 @@
 import React from "react";
 
+import { AsyncThunk } from "@reduxjs/toolkit";
+import { useSelector } from "react-redux";
+
 import { Button, Group, Modal, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
 import { IconCheck, IconCircleX } from "@tabler/icons";
 
-import { AsyncThunk } from "@reduxjs/toolkit";
-
-import { UpdateCatalogValues } from "../api/types";
+import { UpdateCatalogValues, UserPermissionType } from "../api/types";
+import * as userSelectors from "../store/shared/user.selectors";
 import { useAppDispatch } from "../store/store";
 
 type UpdateCatalogEntryModalProps = {
@@ -17,6 +19,7 @@ type UpdateCatalogEntryModalProps = {
   item: UpdateCatalogValues;
   updateFunction: (values: UpdateCatalogValues) => Promise<void>;
   dispatchAction: AsyncThunk<any[], void, {}>;
+  permission: UserPermissionType;
 };
 
 export default function UpdateCatalogEntryModal({
@@ -26,8 +29,10 @@ export default function UpdateCatalogEntryModal({
   item,
   updateFunction,
   dispatchAction,
+  permission,
 }: UpdateCatalogEntryModalProps) {
   const dispatch = useAppDispatch();
+  const userPermissions = useSelector(userSelectors.permissions);
 
   const form = useForm({
     initialValues: item,
@@ -60,6 +65,10 @@ export default function UpdateCatalogEntryModal({
       });
     }
   };
+
+  if (!userPermissions.includes(permission)) {
+    return null;
+  }
 
   return (
     <Modal opened={modalOpen} onClose={() => setModalOpen(false)} title={title}>

@@ -27,6 +27,7 @@ import * as cartApi from "../api/cart";
 import PriceDisplay from "./PriceDisplay";
 import * as actions from "../store/shared/cart.actions";
 import * as selectors from "../store/shared/cart.selectors";
+import * as userSelectors from "../store/shared/user.selectors";
 import { useAppDispatch } from "../store/store";
 
 type CartDrawerProps = {
@@ -51,7 +52,9 @@ export default function CartDrawer({ opened, onClose }: CartDrawerProps) {
 
 function DrawerContent() {
   const dispatch = useAppDispatch();
+
   const items = useSelector(selectors.items);
+  const userPermissions = useSelector(userSelectors.permissions);
 
   const onDeleteItem = (id: number) => {
     dispatch(actions.removeItem(id));
@@ -83,6 +86,10 @@ function DrawerContent() {
       });
     }
   };
+
+  if (!userPermissions.includes("create:cart")) {
+    return null;
+  }
 
   if (items.length === 0) {
     return <Text>Add items to your shopping cart</Text>;

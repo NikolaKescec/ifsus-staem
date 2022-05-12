@@ -1,6 +1,7 @@
 import React from "react";
 
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 import {
   Box,
@@ -18,8 +19,11 @@ import { IconCircleCheck, IconCirclePlus, IconCircleX } from "@tabler/icons";
 import * as articleApi from "../../../api/articles";
 import { CreateArticleCommand } from "../../../api/types";
 import ArticleForm from "../componetns/ArticleForm";
+import * as userSelectors from "../../../store/shared/user.selectors";
 
 export default function ArticleNew() {
+  const userPermissions = useSelector(userSelectors.permissions);
+
   const form = useForm<CreateArticleCommand>({
     initialValues: {
       type: "",
@@ -96,6 +100,10 @@ export default function ArticleNew() {
       setLoading(false);
     }
   };
+
+  if (!userPermissions.includes("create:article")) {
+    return <Navigate to="/" />;
+  }
 
   return (
     <Container p={10} style={{ position: "relative" }}>

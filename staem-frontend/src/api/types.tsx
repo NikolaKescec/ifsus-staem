@@ -177,3 +177,23 @@ export type DataValues = {
   value: string;
   label: string;
 };
+
+export type UserPermissionType =
+  | "create:article"
+  | "update:article"
+  | "delete:article"
+  | "read:article-bought"
+  | "create:cart"
+  | "create:category"
+  | "update:category"
+  | "delete:category"
+  | "create:developer"
+  | "update:developer"
+  | "delete:developer"
+  | "create:genre"
+  | "update:genre"
+  | "delete:genre"
+  | "create:publisher"
+  | "update:publisher"
+  | "delete:publisher"
+  | "buy:article";

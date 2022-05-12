@@ -74,3 +74,16 @@ export async function update(
 
   return response.json();
 }
+
+// DELETE /article/:id
+export async function deleteArticle(id: number): Promise<void> {
+  const response = await fetch(paths.articles.delete(id), {
+    method: "DELETE",
+    headers: getBearerToken(),
+  });
+
+  if (response.status === 400) {
+    const data = await response.json();
+    throw new ValidationError(transformErrors(data));
+  }
+}
