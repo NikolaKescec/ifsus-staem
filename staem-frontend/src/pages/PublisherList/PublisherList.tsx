@@ -73,8 +73,8 @@ export default function PublisherList() {
           <tbody>
             {publishers.map((publisher: PublisherResponse) => {
               if (
-                page * pageSize - pageSize <= publisher.id &&
-                publisher.id < page * pageSize
+                page * pageSize - pageSize < publisher.id &&
+                publisher.id <= page * pageSize
               ) {
                 return (
                   <tr key={publisher.id}>

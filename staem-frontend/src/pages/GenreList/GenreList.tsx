@@ -74,8 +74,8 @@ export default function GenreList() {
           <tbody>
             {genres.map((genre: GenreResponse) => {
               if (
-                page * pageSize - pageSize <= genre.id &&
-                genre.id < page * pageSize
+                page * pageSize - pageSize < genre.id &&
+                genre.id <= page * pageSize
               ) {
                 return (
                   <tr key={genre.id}>

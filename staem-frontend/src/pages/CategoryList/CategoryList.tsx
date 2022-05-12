@@ -73,8 +73,8 @@ export default function CategoryList() {
           <tbody>
             {categories.map((category: CategoryResponse) => {
               if (
-                page * pageSize - pageSize <= category.id &&
-                category.id < page * pageSize
+                page * pageSize - pageSize < category.id &&
+                category.id <= page * pageSize
               ) {
                 return (
                   <tr key={category.id}>

@@ -73,8 +73,8 @@ export default function DeveloperList() {
           <tbody>
             {developers.map((developer: DeveloperResponse) => {
               if (
-                page * pageSize - pageSize <= developer.id &&
-                developer.id < page * pageSize
+                page * pageSize - pageSize < developer.id &&
+                developer.id <= page * pageSize
               ) {
                 return (
                   <tr key={developer.id}>
