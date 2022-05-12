@@ -32,11 +32,15 @@ public class CreateArticleCommandArticleCreateMapper implements CreateMapper<Cre
     @Override
     public Article map(CreateArticleCommand source) {
         final Article article = genericCreateMapper.map(source, Article.class);
+        article.setId(null);
 
         if (source.getArticleType() == ArticleType.DLC) {
-            final List<Article> dlcs = article.getDlcs();
-            dlcs.add(articleQueryService.findById(source.getBaseArticleId()));
-            article.setDlcs(dlcs);
+            final Article baseArticle = articleQueryService.findById(source.getBaseArticleId());
+            article.setBaseArticle(baseArticle);
+
+            final List<Article> dlcs = baseArticle.getDlcs();
+            dlcs.add(article);
+            baseArticle.setDlcs(dlcs);
         }
 
         for (Long publisherId : source.getPublishers()) {

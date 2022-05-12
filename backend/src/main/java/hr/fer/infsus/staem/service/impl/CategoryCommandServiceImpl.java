@@ -1,6 +1,5 @@
 package hr.fer.infsus.staem.service.impl;
 
-import hr.fer.infsus.staem.entity.Article;
 import hr.fer.infsus.staem.entity.Category;
 import hr.fer.infsus.staem.repository.CategoryRepository;
 import hr.fer.infsus.staem.service.CategoryCommandService;
@@ -35,12 +34,6 @@ public class CategoryCommandServiceImpl implements CategoryCommandService {
     @Override
     public void delete(Long id) {
         final Category category = categoryQueryService.findById(id);
-//        category.getArticles().forEach(article -> article.removeCategory(category));
-
-        for(Article article : category.getArticles()) {
-            category.removeArticle(article);
-        }
-
 
         categoryRepository.delete(category);
     }

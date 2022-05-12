@@ -13,6 +13,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class ArticleCommandServiceImpl implements ArticleCommandService {
@@ -36,12 +38,7 @@ public class ArticleCommandServiceImpl implements ArticleCommandService {
     @Override
     public Article update(UpdateArticleCommand updateArticleCommand) {
         final Article article = articleQueryService.findById(updateArticleCommand.getId());
-
         updateArticleCommandArticleCreateMapper.map(updateArticleCommand, article);
-
-        if(article.getArticleType() == ArticleType.DLC) {
-            final Article baseArticle = articleQueryService.findById(updateArticleCommand.getBaseArticleId());
-        }
 
         return articleRepository.save(article);
     }
@@ -49,6 +46,13 @@ public class ArticleCommandServiceImpl implements ArticleCommandService {
     @Override
     public void delete(Long id) {
         final Article article = articleQueryService.findById(id);
+
+        if (article.getArticleType() == ArticleType.DLC) {
+            final List<Article> dlcs = article.getBaseArticle().getDlcs();
+            dlcs.remove(article);
+            article.getBaseArticle().setDlcs(dlcs);
+            article.setBaseArticle(null);
+        }
 
         articleRepository.delete(article);
     }

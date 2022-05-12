@@ -2,7 +2,8 @@ package hr.fer.infsus.staem.entity;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -17,6 +18,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.math.BigDecimal;
@@ -29,6 +31,8 @@ import java.util.Set;
 
 @Entity
 @Table(name = "article")
+@SQLDelete(sql = "update article set is_deleted=true where id=?")
+@Where(clause = "is_deleted = false")
 @Getter
 @Setter
 public class Article {
@@ -57,40 +61,60 @@ public class Article {
     @Enumerated(EnumType.STRING)
     private ArticleType articleType;
 
+    @ManyToOne
+    @JoinColumn(name = "id_base_article", foreignKey = @ForeignKey(name = "id_base_article"))
+    private Article baseArticle;
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "id_base_article", foreignKey = @ForeignKey(name = "id_base_article"))
-    private List<Article> dlcs;
+    private List<Article> dlcs = new ArrayList<>();
 
-    @ManyToMany()
+    @ManyToMany
     @JoinTable(name = "article_publisher",
         joinColumns = { @JoinColumn(name = "id_article", nullable = false) },
         inverseJoinColumns = { @JoinColumn(name = "id_publisher", nullable = false) })
-    private Set<Publisher> publishers;
+    private Set<Publisher> publishers = new LinkedHashSet<>();
 
     @ManyToMany
     @JoinTable(name = "article_developer",
         joinColumns = { @JoinColumn(name = "id_article", nullable = false) },
         inverseJoinColumns = { @JoinColumn(name = "id_developer", nullable = false) })
-    private Set<Developer> developers;
+    private Set<Developer> developers = new LinkedHashSet<>();
 
     @ManyToMany
     @JoinTable(name = "article_category",
         joinColumns = { @JoinColumn(name = "id_article", nullable = false) },
         inverseJoinColumns = { @JoinColumn(name = "id_category", nullable = false) })
-    private Set<Category> categories;
+    private Set<Category> categories = new LinkedHashSet<>();
 
     @ManyToMany
     @JoinTable(name = "article_genre",
         joinColumns = { @JoinColumn(name = "id_article", nullable = false) },
         inverseJoinColumns = { @JoinColumn(name = "id_genre", nullable = false) })
-    private Set<Genre> genres;
+    private Set<Genre> genres = new LinkedHashSet<>();
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_article", foreignKey = @ForeignKey(name = "id_article"), nullable = false)
-    private List<Picture> pictures;
+    private List<Picture> pictures = new ArrayList<>();
 
     @Column(name = "is_deleted", nullable = false)
-    private Boolean isDeleted;
+    private Boolean isDeleted = false;
+
+    public void addPublisher(Publisher publisher) {
+        this.publishers.add(publisher);
+    }
+
+    public void addGenre(Genre genre) {
+        this.genres.add(genre);
+    }
+
+    public void addCategory(Category category) {
+        this.categories.add(category);
+    }
+
+    public void addDeveloper(Developer developer) {
+        this.developers.add(developer);
+    }
 
     public List<Article> getDlcs() {
         if (dlcs == null) {

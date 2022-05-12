@@ -2,7 +2,8 @@ package hr.fer.infsus.staem.entity;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,6 +15,8 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "picture")
+@SQLDelete(sql = "update Picture set is_deleted=true where id=?")
+@Where(clause = "is_deleted = false")
 @Getter
 @Setter
 public class Picture {
@@ -31,6 +34,6 @@ public class Picture {
     private String urlThumbnail;
 
     @Column(name = "is_deleted", nullable = false)
-    private Boolean isDeleted;
+    private Boolean isDeleted = false;
 
 }

@@ -34,7 +34,6 @@ public class DeveloperCommandServiceImpl implements DeveloperCommandService {
     @Override
     public void delete(Long id) {
         final Developer developer = developerQueryService.findById(id);
-        developer.getArticles().forEach(article -> article.removeDeveloper(developer));
 
         developerRepository.delete(developer);
     }

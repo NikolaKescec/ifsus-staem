@@ -37,38 +37,46 @@ public class UpdateArticleCommandArticleUpdateMapper implements UpdateMapper<Upd
 
     @Override
     public void map(UpdateArticleCommand source, Article article) {
+        final ArticleType oldArticleType = article.getArticleType();
+
         genericUpdateMapper.map(source, article);
 
-        for (Publisher publisher : article.getPublishers()) {
-            publisher.removeArticle(article);
+        if (oldArticleType == ArticleType.DLC && article.getArticleType() == ArticleType.GAME) {
+            final Article baseArticle = article.getBaseArticle();
+
+            final List<Article> dlcs = baseArticle.getDlcs();
+            dlcs.remove(article);
+            baseArticle.setDlcs(dlcs);
+
+            article.setBaseArticle(null);
+        } else if (oldArticleType == ArticleType.GAME && article.getArticleType() == ArticleType.DLC) {
+            final Article baseArticle = articleQueryService.findById(source.getBaseArticleId());
+
+            final List<Article> dlcs = baseArticle.getDlcs();
+            dlcs.add(article);
+            baseArticle.setDlcs(dlcs);
+
+            article.setBaseArticle(baseArticle);
         }
+
         final Set<Publisher> updatedPublishers = new HashSet<>();
         for (Long publisherId : source.getPublishers()) {
             updatedPublishers.add(publisherQueryService.findById(publisherId));
         }
         article.setPublishers(updatedPublishers);
 
-        for (Genre genre : article.getGenres()) {
-            genre.removeArticle(article);
-        }
         final Set<Genre> updatedGenre = new HashSet<>();
         for (Long genreId : source.getGenres()) {
             updatedGenre.add(genreQueryService.findById(genreId));
         }
         article.setGenres(updatedGenre);
 
-        for (Category category : article.getCategories()) {
-            category.removeArticle(article);
-        }
         final Set<Category> updatedCategory = new HashSet<>();
         for (Long categoryId : source.getGenres()) {
             updatedCategory.add(categoryQueryService.findById(categoryId));
         }
         article.setCategories(updatedCategory);
 
-        for (Developer developer : article.getDevelopers()) {
-            developer.removeArticle(article);
-        }
         final Set<Developer> updatedDevelopers = new HashSet<>();
         for (Long developerId : source.getDevelopers()) {
             updatedDevelopers.add(developerQueryService.findById(developerId));
