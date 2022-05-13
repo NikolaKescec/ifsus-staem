@@ -55,7 +55,7 @@ export default function MyArticles() {
 function MyArticlesList() {
   const result = useSelector(selectors.result);
 
-  const totalPages = Math.ceil(result!.length / 10);
+  const totalPages = Math.ceil(result.length / 10);
 
   const [page, onPageChange] = React.useState(1);
   const pagination = usePagination({
@@ -76,7 +76,7 @@ function MyArticlesList() {
   return (
     <Container>
       <Stack align="stretch" spacing={5}>
-        {result?.map((article: ArticleResponse) => (
+        {result.map((article: ArticleResponse) => (
           <ArticleDisplay article={article} key={article.id} />
         ))}
       </Stack>

@@ -27,6 +27,8 @@ import * as cartApi from "../api/cart";
 import PriceDisplay from "./PriceDisplay";
 import * as actions from "../store/shared/cart.actions";
 import * as selectors from "../store/shared/cart.selectors";
+import * as articleDetailsActions from "../pages/ArticleDetails/ArticleDetails.actions";
+import * as articleDetailsSelectors from "../pages/ArticleDetails/ArticleDetails.selectors";
 import * as userSelectors from "../store/shared/user.selectors";
 import { useAppDispatch } from "../store/store";
 
@@ -58,33 +60,6 @@ function DrawerContent() {
 
   const onDeleteItem = (id: number) => {
     dispatch(actions.removeItem(id));
-  };
-
-  const onClear = () => {
-    dispatch(actions.clear());
-    showNotification({
-      message: "Cart cleared",
-    });
-  };
-
-  const onBuy = async () => {
-    try {
-      await cartApi.create({ articles: items.map((item) => item.id) });
-
-      showNotification({
-        message: "Items successfully purchased",
-        color: "green",
-        icon: <IconCircleCheck />,
-      });
-
-      dispatch(actions.clear());
-    } catch (error) {
-      showNotification({
-        message: "Error purchasing items",
-        color: "red",
-        icon: <IconCircleX />,
-      });
-    }
   };
 
   if (!userPermissions.includes("create:cart")) {
@@ -125,16 +100,60 @@ function DrawerContent() {
         </Card>
       ))}
 
-      {items.length > 0 && (
-        <Group position="right" mt={20}>
-          <Button color="red" onClick={onClear} leftIcon={<IconX />}>
-            Clear Cart
-          </Button>
-          <Button onClick={onBuy} leftIcon={<IconCreditCard />}>
-            Buy Items
-          </Button>
-        </Group>
-      )}
+      <CartActions />
     </Stack>
+  );
+}
+
+function CartActions() {
+  const dispatch = useAppDispatch();
+
+  const items = useSelector(selectors.items);
+  const articleDetails = useSelector(articleDetailsSelectors.result);
+
+  const onClear = () => {
+    dispatch(actions.clear());
+    showNotification({
+      message: "Cart cleared",
+    });
+  };
+
+  const onBuy = async () => {
+    try {
+      await cartApi.create({ articles: items.map((item) => item.id) });
+
+      showNotification({
+        message: "Items successfully purchased",
+        color: "green",
+        icon: <IconCircleCheck />,
+      });
+
+      dispatch(actions.clear());
+
+      if (articleDetails?.id) {
+        dispatch(articleDetailsActions.findById(articleDetails.id));
+      }
+    } catch (error) {
+      showNotification({
+        message: "Error purchasing items",
+        color: "red",
+        icon: <IconCircleX />,
+      });
+    }
+  };
+
+  if (items.length === 0) {
+    return null;
+  }
+
+  return (
+    <Group position="right" mt={20}>
+      <Button color="red" onClick={onClear} leftIcon={<IconX />}>
+        Clear Cart
+      </Button>
+      <Button onClick={onBuy} leftIcon={<IconCreditCard />}>
+        Buy Items
+      </Button>
+    </Group>
   );
 }
