@@ -42,10 +42,6 @@ export default function ArticleListResult() {
     );
   }, [dispatch, filter, page.pageNumber, page.pageSize]);
 
-  const onPageChange = (pageNumber: number) => {
-    dispatch(actions.page(pageNumber));
-  };
-
   if (status === "error") {
     return <ErrorAlert />;
   }
@@ -71,7 +67,7 @@ function ArticleList() {
   return (
     <>
       <Stack align="stretch" spacing={5}>
-        {result?.map((article: ArticleResponse) => (
+        {result.map((article: ArticleResponse) => (
           <Paper
             key={article.id}
             onClick={() => navigate(`/article/${article.id}`)}

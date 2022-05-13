@@ -58,18 +58,14 @@ function ArticleUpdateForm() {
 
   const form = useForm<CreateArticleCommand>({
     initialValues: {
-      ...result!,
+      ...result,
       type: "GAME",
       baseArticleId: undefined,
-      releaseDate: new Date(result!.releaseDate),
-      categories: result!.categories.map((category) => category.id.toString()),
-      developers: result!.developers.map((developer) =>
-        developer.id.toString()
-      ),
-      genres: result!.genres.map((genre) => genre.id.toString()),
-      publishers: result!.publishers.map((publisher) =>
-        publisher.id.toString()
-      ),
+      releaseDate: new Date(result.releaseDate),
+      categories: result.categories.map((category) => category.id.toString()),
+      developers: result.developers.map((developer) => developer.id.toString()),
+      genres: result.genres.map((genre) => genre.id.toString()),
+      publishers: result.publishers.map((publisher) => publisher.id.toString()),
     },
     validate: {
       type: (value) =>
