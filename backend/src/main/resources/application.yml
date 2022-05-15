@@ -1,8 +1,25 @@
 spring:
+  sql:
+    init:
+      mode: never
   jpa:
     hibernate:
       ddl-auto: validate
-    show-sql: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: pomozimiemail@gmail.com
+    password: pomoziMi6!
+    properties:
+      mail:
+        smtp:
+          starttls:
+            required: true
+          auth: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+          starttls.enable: true
 
   datasource:
     driver-class-name: ${DB_DRIVER:org.h2.Driver}

@@ -11,7 +11,7 @@ import spock.lang.Specification
 import spock.lang.Subject
 
 @Subject(PublisherQueryService)
-@ActiveProfiles("h2")
+@ActiveProfiles("test")
 class PublisherQueryServiceTest extends Specification {
 
   PublisherRepository publisherRepository = Mock()

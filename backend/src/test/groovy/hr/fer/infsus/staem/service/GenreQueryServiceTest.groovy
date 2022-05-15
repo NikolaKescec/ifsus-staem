@@ -12,7 +12,7 @@ import spock.lang.Specification
 import spock.lang.Subject
 
 @Subject(GenreQueryService)
-@ActiveProfiles("h2")
+@ActiveProfiles("test")
 class GenreQueryServiceTest extends Specification {
 
   GenreRepository genreRepository = Mock()

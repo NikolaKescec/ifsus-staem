@@ -11,7 +11,7 @@ import spock.lang.Specification
 import spock.lang.Subject
 
 @Subject(CategoryQueryService)
-@ActiveProfiles("h2")
+@ActiveProfiles("test")
 class CategoryQueryServiceTest extends Specification {
 
   CategoryRepository categoryRepository = Mock()

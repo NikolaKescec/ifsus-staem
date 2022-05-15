@@ -10,7 +10,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.Table;
 
 @Entity
@@ -25,12 +24,10 @@ public class Picture {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Lob
-    @Column(columnDefinition = "text")
+    @Column(columnDefinition = "clob")
     private String urlFull;
 
-    @Lob
-    @Column(columnDefinition = "text")
+    @Column(columnDefinition = "clob")
     private String urlThumbnail;
 
     @Column(name = "is_deleted", nullable = false)

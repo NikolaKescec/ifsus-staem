@@ -17,6 +17,7 @@ import hr.fer.infsus.staem.service.command.update.UpdateArticleCommand;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -57,8 +58,10 @@ public class UpdateArticleCommandArticleUpdateMapper implements UpdateMapper<Upd
             final List<Article> dlcs = baseArticle.getDlcs();
             dlcs.add(article);
             baseArticle.setDlcs(dlcs);
-
             article.setBaseArticle(baseArticle);
+
+            article.getDlcs().forEach(dlc -> dlc.setBaseArticle(null));
+            article.setDlcs(Collections.emptyList());
         }
 
         final Set<Publisher> updatedPublishers = new HashSet<>();

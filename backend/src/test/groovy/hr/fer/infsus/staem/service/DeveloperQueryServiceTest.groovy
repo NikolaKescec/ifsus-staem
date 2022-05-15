@@ -11,7 +11,7 @@ import spock.lang.Specification
 import spock.lang.Subject
 
 @Subject(DeveloperQueryService)
-@ActiveProfiles("h2")
+@ActiveProfiles("test")
 class DeveloperQueryServiceTest extends Specification {
 
   DeveloperRepository developerRepository = Mock()
