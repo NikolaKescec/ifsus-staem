@@ -36,12 +36,15 @@ class ArticleRepositoryTest extends Specification {
 
   def "should return all articles with specified title, developer, category, publisher and price list"() {
     given:
+    def priceRange = new PriceRange()
+    priceRange.setMinPrice(50)
+    priceRange.setMaxPrice(200)
     def query = FindArticleQueryTestBuilder.builder().def()
         .withCategoryId(1)
         .withDeveloperId(1)
         .withPublisherId(1)
         .withTitle("Article")
-        .withPriceRange(new PriceRange(50, 200))
+        .withPriceRange(priceRange)
         .build();
 
     when:

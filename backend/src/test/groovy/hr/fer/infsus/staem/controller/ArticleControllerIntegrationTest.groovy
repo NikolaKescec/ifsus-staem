@@ -10,11 +10,6 @@ import hr.fer.infsus.staem.testBuilders.UpdateArticleRequestTestBuilder
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.domain.Page
-import org.springframework.security.core.Authentication
-import org.springframework.security.core.context.SecurityContext
-import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.security.oauth2.jwt.Jwt
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.jdbc.Sql
 import org.springframework.transaction.annotation.Transactional
@@ -35,12 +30,15 @@ class ArticleControllerIntegrationTest extends Specification {
 
   def "get all articles"() {
     given:
+    def priceRange = new PriceRange()
+    priceRange.setMinPrice(50)
+    priceRange.setMaxPrice(200)
     def query = FindArticleQueryTestBuilder.builder().def()
         .withCategoryId(1)
         .withDeveloperId(1)
         .withPublisherId(1)
         .withTitle("Article")
-        .withPriceRange(new PriceRange(50, 200))
+        .withPriceRange(priceRange)
         .build();
 
     when:

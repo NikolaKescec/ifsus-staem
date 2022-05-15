@@ -11,6 +11,7 @@ import hr.fer.infsus.staem.service.command.create.CreateArticleCommand;
 import hr.fer.infsus.staem.service.command.update.UpdateArticleCommand;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -43,6 +44,10 @@ public class ArticleTestBuilder {
         this.article.setPublishers(Set.of(PublisherTestBuilder.builder().def().build()));
         this.article.setDevelopers(Set.of(DeveloperTestBuilder.builder().def().build()));
         this.article.setGenres(Set.of(GenreTestBuilder.builder().def().build()));
+        this.article.setPictureUrl("pictureUrl");
+        this.article.setCurrency("USD");
+        this.article.setReleaseDate(LocalDate.of(2018, 1, 1));
+        this.article.setDescription("description");
 
         return this;
     }

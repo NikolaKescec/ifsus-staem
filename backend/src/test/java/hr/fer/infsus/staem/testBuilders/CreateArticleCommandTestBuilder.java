@@ -36,7 +36,7 @@ public class CreateArticleCommandTestBuilder {
         this.createArticleCommand.setDevelopers(List.of(1L));
         this.createArticleCommand.setGenres(List.of(1L));
         this.createArticleCommand.setPictureUrl("pictureUrl");
-        this.createArticleCommand.setCurrency("currency");
+        this.createArticleCommand.setCurrency("USD");
         this.createArticleCommand.setReleaseDate(LocalDate.of(2018, 1, 1));
         this.createArticleCommand.setDescription("description");
 
