@@ -1,11 +1,13 @@
 package hr.fer.infsus.staem.service.impl;
 
 import hr.fer.infsus.staem.entity.Cart;
+import hr.fer.infsus.staem.entity.PurchasedArticles;
 import hr.fer.infsus.staem.entity.Users;
 import hr.fer.infsus.staem.exception.ArticleAlreadyBought;
 import hr.fer.infsus.staem.mapper.core.CreateMapper;
 import hr.fer.infsus.staem.service.CartCommandService;
 import hr.fer.infsus.staem.service.CartSagaService;
+import hr.fer.infsus.staem.service.MailService;
 import hr.fer.infsus.staem.service.PurchasedArticleCommandService;
 import hr.fer.infsus.staem.service.PurchasedArticleQueryService;
 import hr.fer.infsus.staem.service.UsersCommandService;
@@ -14,6 +16,7 @@ import hr.fer.infsus.staem.service.command.create.CreateCartCommand;
 import hr.fer.infsus.staem.service.command.create.CreatePurchasedArticlesCommand;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -31,8 +34,11 @@ public class CartSagaServiceImpl implements CartSagaService {
 
     private final PurchasedArticleCommandService purchasedArticleCommandService;
 
+    private final MailService mailService;
+
     private final CreateMapper<Cart, List<CreatePurchasedArticlesCommand>> cartListCreateMapper;
 
+    @Transactional
     @Override
     public void create(String currentSubject, CreateCartCommand createCartCommand) {
         Users currentUser = usersQueryService.findById(currentSubject);
@@ -48,7 +54,10 @@ public class CartSagaServiceImpl implements CartSagaService {
         final List<CreatePurchasedArticlesCommand> createPurchasedArticlesCommandList =
             cartListCreateMapper.map(savedCart);
 
-        purchasedArticleCommandService.createAll(createPurchasedArticlesCommandList);
+        final List<PurchasedArticles> articles =
+            purchasedArticleCommandService.createAll(createPurchasedArticlesCommandList);
+
+        mailService.sendMail(articles);
     }
 
 }

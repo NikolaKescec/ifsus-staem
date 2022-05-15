@@ -3,6 +3,7 @@ package hr.fer.infsus.staem.entity;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Type;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.CascadeType;
@@ -43,8 +44,7 @@ public class Article {
 
     private String title;
 
-    @Lob
-    @Column(columnDefinition = "text")
+    @Column(columnDefinition = "clob")
     private String description;
 
     private BigDecimal price;
@@ -52,8 +52,7 @@ public class Article {
     @Column(length = 3)
     private String currency;
 
-    @Lob
-    @Column(columnDefinition = "text")
+    @Column(columnDefinition = "clob")
     private String pictureUrl;
 
     private LocalDate releaseDate;

@@ -2,6 +2,7 @@ package hr.fer.infsus.staem.repository.query;
 
 import hr.fer.infsus.staem.validator.validpricerange.ValidPriceRange;
 import hr.fer.infsus.staem.validator.validpricerange.ValidPriceRangeFields;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @ValidPriceRange

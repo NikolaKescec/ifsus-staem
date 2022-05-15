@@ -6,6 +6,4 @@ public interface UsersQueryService {
 
     Users findById(String id);
 
-    boolean existsById(String id);
-
 }

@@ -3,7 +3,6 @@ package hr.fer.infsus.staem.controller;
 import hr.fer.infsus.staem.controller.request.create.CreateDeveloperRequest;
 import hr.fer.infsus.staem.controller.request.update.UpdateDeveloperRequest;
 import hr.fer.infsus.staem.controller.response.DeveloperResponse;
-import hr.fer.infsus.staem.controller.response.GenreResponse;
 import hr.fer.infsus.staem.exception.IdMismatchException;
 import hr.fer.infsus.staem.mapper.core.GenericCreateMapper;
 import hr.fer.infsus.staem.service.DeveloperCommandService;
@@ -52,7 +51,7 @@ public class DeveloperController {
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAuthority('update:developer')")
-    public GenreResponse update(@PathVariable("id") Long id,
+    public DeveloperResponse update(@PathVariable("id") Long id,
         @RequestBody @Valid UpdateDeveloperRequest updateDeveloperRequest) {
         if (!id.equals(updateDeveloperRequest.getId())) {
             throw new IdMismatchException(id, updateDeveloperRequest.getId());
@@ -60,7 +59,7 @@ public class DeveloperController {
 
         return genericCreateMapper.map(
             developerCommandService.update(updateDeveloperRequest.getId(), updateDeveloperRequest.getName()),
-            GenreResponse.class);
+            DeveloperResponse.class);
     }
 
     @DeleteMapping("/{id}")

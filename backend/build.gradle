@@ -2,11 +2,12 @@ plugins {
   id 'org.springframework.boot' version '2.6.7'
   id 'io.spring.dependency-management' version '1.0.11.RELEASE'
   id 'java'
+  id 'groovy'
 }
 
 group = 'hr.fer.infsus'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '18'
+sourceCompatibility = '17'
 
 configurations {
   compileOnly {
@@ -34,8 +35,15 @@ dependencies {
   runtimeOnly 'com.h2database:h2'
 
   annotationProcessor "org.hibernate:hibernate-jpamodelgen"
+
+  testImplementation 'org.spockframework:spock-spring:2.1-groovy-3.0'
+  testImplementation 'org.spockframework:spock-core:2.1-groovy-3.0'
+
+  implementation 'org.codehaus.groovy:groovy:3.0.10'
+
+  implementation 'org.springframework.boot:spring-boot-starter-mail:2.6.7'
 }
 
-tasks.named('test') {
+test {
   useJUnitPlatform()
 }

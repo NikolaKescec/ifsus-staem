@@ -20,9 +20,4 @@ public class UsersQueryServiceImpl implements UsersQueryService {
         return usersRepository.findById(id).orElse(null);
     }
 
-    @Override
-    public boolean existsById(String id) {
-        return usersRepository.existsById(id);
-    }
-
 }
