@@ -302,7 +302,7 @@ function DescriptionCard() {
     <Card p={20}>
       <Text weight="bold">Description</Text>
       <Spoiler maxHeight={120} hideLabel="Hide" showLabel="Show more">
-        <Text>{result?.description}</Text>
+        <Text dangerouslySetInnerHTML={{ __html: result!.description }} />
       </Spoiler>
     </Card>
   );
