@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface MailService {
 
-    public void sendMail(List<PurchasedArticles> purchasedArticles);
+    public void sendMail(String email, List<PurchasedArticles> purchasedArticles);
 
 }

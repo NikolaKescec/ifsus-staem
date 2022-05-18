@@ -3,12 +3,9 @@ package hr.fer.infsus.staem.controller
 import hr.fer.infsus.staem.controller.request.create.CreateCartRequest
 import hr.fer.infsus.staem.controller.response.ArticleResponse
 import hr.fer.infsus.staem.exception.ArticleAlreadyBought
+import hr.fer.infsus.staem.testBuilders.UserInfoTestBuilder
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.security.core.Authentication
-import org.springframework.security.core.context.SecurityContext
-import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.jdbc.Sql
 import org.springframework.transaction.annotation.Transactional
@@ -30,16 +27,14 @@ class CartControllerIntegrationTest extends Specification {
 
   def "buy first time"() {
     given:
-    setSecurityContext()
+    def userInfo = UserInfoTestBuilder.builder().def().withSubject('NEW_USER').withEmail("pomozimiemail@gmail.com").build();
     def createCartRequest = new CreateCartRequest()
     createCartRequest.setArticles(List.of(1L, 2L, 3L))
 
     when:
-    List<ArticleResponse> old_result = articleController.findBought("NEW_USER")
-    cartController.create("NEW_USER", createCartRequest)
-    List<ArticleResponse> result = articleController.findBought("NEW_USER").sort((a1, a2) -> a1.getId() <=> a2.getId())
-
-    then:
+    List<ArticleResponse> old_result = articleController.findBought(userInfo)
+    cartController.create(userInfo, createCartRequest)
+    List<ArticleResponse> result = articleController.findBought(userInfo).sort((a1, a2) -> a1.getId() <=> a2.getId())
 
     then:
     old_result.size() == 0
@@ -69,14 +64,14 @@ class CartControllerIntegrationTest extends Specification {
 
   def "buy second time"() {
     given:
-    setSecurityContext()
+    def userInfo = UserInfoTestBuilder.builder().def().withSubject('USER_2').withEmail("pomozimiemail@gmail.com").build();
     def createCartRequest = new CreateCartRequest()
     createCartRequest.setArticles(List.of(1L))
 
     when:
-    List<ArticleResponse> old_result = articleController.findBought("USER_2")
-    cartController.create("USER_2", createCartRequest)
-    List<ArticleResponse> result = articleController.findBought("USER_2").sort((a1, a2) -> a1.getId() <=> a2.getId())
+    List<ArticleResponse> old_result = articleController.findBought(userInfo)
+    cartController.create(userInfo, createCartRequest)
+    List<ArticleResponse> result = articleController.findBought(userInfo).sort((a1, a2) -> a1.getId() <=> a2.getId())
 
     then:
     old_result.size() == 2
@@ -106,28 +101,15 @@ class CartControllerIntegrationTest extends Specification {
 
   def "buy already bought"() {
     given:
+    def userInfo = UserInfoTestBuilder.builder().def().withSubject('USER_1').withEmail("pomozimiemail@gmail.com").build();
     def createCartRequest = new CreateCartRequest()
     createCartRequest.setArticles(List.of(1L))
 
     when:
-    cartController.create("USER_1", createCartRequest)
+    cartController.create(userInfo, createCartRequest)
 
     then:
     thrown(ArticleAlreadyBought)
-  }
-
-
-  def setSecurityContext() {
-    Jwt jwt = Mock()
-    jwt.getClaimAsString("email") >> "pomozimiemail@gmail.com"
-
-    Authentication authentication = Mock()
-    authentication.getPrincipal() >> jwt
-
-    SecurityContext securityContext = Mock()
-    securityContext.getAuthentication() >> authentication
-
-    SecurityContextHolder.setContext(securityContext)
   }
 
 }

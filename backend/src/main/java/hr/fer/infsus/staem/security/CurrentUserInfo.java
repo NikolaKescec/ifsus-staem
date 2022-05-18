@@ -10,7 +10,7 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented
-@AuthenticationPrincipal(expression = "@currentUser.apply(#this)", errorOnInvalidType = true)
-public @interface CurrentSubject {
+@AuthenticationPrincipal(expression = "@currentUserInfo.apply(#this)", errorOnInvalidType = true)
+public @interface CurrentUserInfo {
 
 }

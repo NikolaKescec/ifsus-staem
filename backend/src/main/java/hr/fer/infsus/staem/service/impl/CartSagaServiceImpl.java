@@ -5,6 +5,7 @@ import hr.fer.infsus.staem.entity.PurchasedArticles;
 import hr.fer.infsus.staem.entity.Users;
 import hr.fer.infsus.staem.exception.ArticleAlreadyBought;
 import hr.fer.infsus.staem.mapper.core.CreateMapper;
+import hr.fer.infsus.staem.security.UserInfo;
 import hr.fer.infsus.staem.service.CartCommandService;
 import hr.fer.infsus.staem.service.CartSagaService;
 import hr.fer.infsus.staem.service.MailService;
@@ -40,10 +41,10 @@ public class CartSagaServiceImpl implements CartSagaService {
 
     @Transactional
     @Override
-    public void create(String currentSubject, CreateCartCommand createCartCommand) {
-        Users currentUser = usersQueryService.findById(currentSubject);
+    public void create(UserInfo currentUserInfo, CreateCartCommand createCartCommand) {
+        Users currentUser = usersQueryService.findById(currentUserInfo.getSubject());
         if (currentUser == null) {
-            currentUser = usersCommandService.create(currentSubject);
+            currentUser = usersCommandService.create(currentUserInfo.getSubject());
         } else if (purchasedArticleQueryService.alreadyBoughtAnyItem(currentUser.getId(),
             createCartCommand.getArticles())) {
             throw new ArticleAlreadyBought();
@@ -57,7 +58,7 @@ public class CartSagaServiceImpl implements CartSagaService {
         final List<PurchasedArticles> articles =
             purchasedArticleCommandService.createAll(createPurchasedArticlesCommandList);
 
-        mailService.sendMail(articles);
+        mailService.sendMail(currentUserInfo.getEmail(), articles);
     }
 
 }

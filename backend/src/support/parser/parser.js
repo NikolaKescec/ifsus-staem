@@ -22,8 +22,15 @@ const monthMap = {
 function convertDate(dateString) {
   const parts = dateString.split(" ");
 
-  return "CURRENT_DATE";
-  //return `${parts[0]}-${monthMap[parts[1].replace(/.$/, '')]}-${parts[2]}`;
+  const day = parseInt(parts[0]);
+  const month = parseInt(monthMap[parts[1]?.replace(/.$/, "")]);
+  const year = parseInt(parts[2]);
+
+  if (isNaN(month) || isNaN(day) || isNaN(year)) {
+    return "CURRENT_DATE";
+  }
+
+  return `'${year}-${month}-${day}'`;
 }
 
 function escapeString(s) {
