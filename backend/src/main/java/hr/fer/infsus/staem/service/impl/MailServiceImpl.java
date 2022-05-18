@@ -7,8 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,12 +20,12 @@ public class MailServiceImpl implements MailService {
 
     private final Logger logger = LoggerFactory.getLogger(MailServiceImpl.class);
 
+    @Async
     @Override
-    public void sendMail(List<PurchasedArticles> purchasedArticles) {
+    public void sendMail(String email, List<PurchasedArticles> purchasedArticles) {
         final SimpleMailMessage message = new SimpleMailMessage();
         try {
-            final Jwt token = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            message.setTo(token.getClaimAsString("email"));
+            message.setTo(email);
             message.setSubject("You have bought new articles!");
             message.setText(prepareText(purchasedArticles));
             message.setFrom("staem-store");
@@ -35,7 +34,6 @@ public class MailServiceImpl implements MailService {
         } catch (Exception e) {
             logger.error("Error while sending email", e);
         }
-
     }
 
     private String prepareText(List<PurchasedArticles> articles) {

@@ -7,6 +7,7 @@ import hr.fer.infsus.staem.repository.query.PriceRange
 import hr.fer.infsus.staem.testBuilders.CreateArticleRequestTestBuilder
 import hr.fer.infsus.staem.testBuilders.FindArticleQueryTestBuilder
 import hr.fer.infsus.staem.testBuilders.UpdateArticleRequestTestBuilder
+import hr.fer.infsus.staem.testBuilders.UserInfoTestBuilder
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.domain.Page
@@ -65,11 +66,11 @@ class ArticleControllerIntegrationTest extends Specification {
 
   def "find non bought article"() {
     given:
-
+    def userInfo = UserInfoTestBuilder.builder().build();
     def articleId = 1L
 
     when:
-    ArticleDetailsResponse result = articleController.findById(null, articleId)
+    ArticleDetailsResponse result = articleController.findById(userInfo, articleId)
 
     then:
     verifyAll(result) {
@@ -91,10 +92,11 @@ class ArticleControllerIntegrationTest extends Specification {
 
   def "find bought article"() {
     given:
+    def userInfo = UserInfoTestBuilder.builder().def().withSubject('USER_1').build();
     def articleId = 1L
 
     when:
-    ArticleDetailsResponse result = articleController.findById('USER_1', articleId)
+    ArticleDetailsResponse result = articleController.findById(userInfo, articleId)
 
     then:
     verifyAll(result) {
@@ -116,10 +118,10 @@ class ArticleControllerIntegrationTest extends Specification {
 
   def "find all bought articles from user"() {
     given:
-    def articleId = 1L
+    def userInfo = UserInfoTestBuilder.builder().def().withSubject('USER_1').build();
 
     when:
-    List<ArticleResponse> result = articleController.findBought('USER_1')
+    List<ArticleResponse> result = articleController.findBought(userInfo)
 
     then:
     result.size() == 3

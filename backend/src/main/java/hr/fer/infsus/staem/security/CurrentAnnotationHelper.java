@@ -9,13 +9,13 @@ import java.util.function.Function;
 
 @Component
 @AllArgsConstructor
-public class CurrentSubjectComponent {
+public class CurrentAnnotationHelper {
 
-    private final CreateMapper<Object, String> subjectCreateMapper;
+    private final CreateMapper<Object, UserInfo> jwtUserInfoCreateMapper;
 
     @Bean
-    public Function<Object, String> currentUser() {
-        return subjectCreateMapper::map;
+    public Function<Object, UserInfo> currentUserInfo() {
+        return jwtUserInfoCreateMapper::map;
     }
 
 }

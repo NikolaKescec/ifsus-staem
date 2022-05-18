@@ -1,25 +1,27 @@
 spring:
-  sql:
-    init:
-      mode: never
   jpa:
+    defer-datasource-initialization: false
     hibernate:
       ddl-auto: validate
+    show-sql: true
+  h2:
+    console:
+      enabled: true
   mail:
-    host: smtp.gmail.com
-    port: 587
-    username: pomozimiemail@gmail.com
-    password: pomoziMi6!
+    host: smtp.mailtrap.io
+    port: 2525
+    username: 4632d20a47a5e8
+    password: ac2a2344691f9b
     properties:
       mail:
         smtp:
           starttls:
             required: true
+            enable: true
           auth: true
           connectiontimeout: 5000
           timeout: 5000
           writetimeout: 5000
-          starttls.enable: true
 
   datasource:
     driver-class-name: ${DB_DRIVER:org.h2.Driver}

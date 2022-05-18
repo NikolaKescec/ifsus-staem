@@ -9,7 +9,8 @@ import hr.fer.infsus.staem.entity.PurchasedArticles;
 import hr.fer.infsus.staem.mapper.core.BiCreateMapper;
 import hr.fer.infsus.staem.mapper.core.GenericCreateMapper;
 import hr.fer.infsus.staem.repository.query.FindArticleQuery;
-import hr.fer.infsus.staem.security.CurrentSubject;
+import hr.fer.infsus.staem.security.CurrentUserInfo;
+import hr.fer.infsus.staem.security.UserInfo;
 import hr.fer.infsus.staem.service.ArticleCommandService;
 import hr.fer.infsus.staem.service.ArticleQueryService;
 import hr.fer.infsus.staem.service.PurchasedArticleQueryService;
@@ -56,16 +57,18 @@ public class ArticleController {
 
     @GetMapping("/{id}")
     @ResponseStatus(value = HttpStatus.OK)
-    public ArticleDetailsResponse findById(@CurrentSubject String currentSubject, @PathVariable("id") Long id) {
-        return articleSubjectArticleDetailsResponseBiCreateMapper.map(articleQueryService.findById(id), currentSubject);
+    public ArticleDetailsResponse findById(@CurrentUserInfo UserInfo currentUserInfo, @PathVariable("id") Long id) {
+        return articleSubjectArticleDetailsResponseBiCreateMapper
+            .map(articleQueryService.findById(id), currentUserInfo.getSubject());
     }
 
     @GetMapping("/bought")
     @ResponseStatus(value = HttpStatus.OK)
     @PreAuthorize("hasAuthority('read:article-bought')")
-    public List<ArticleResponse> findBought(@CurrentSubject String currentSubject) {
+    public List<ArticleResponse> findBought(@CurrentUserInfo UserInfo currentUserInfo) {
         return genericCreateMapper.mapToList(
-            purchasedArticleQueryService.findBought(currentSubject).stream().map(PurchasedArticles::getArticle)
+            purchasedArticleQueryService.findBought(currentUserInfo.getSubject()).stream()
+                .map(PurchasedArticles::getArticle)
                 .toList(), ArticleResponse.class);
     }
 

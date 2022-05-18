@@ -2,7 +2,8 @@ package hr.fer.infsus.staem.controller;
 
 import hr.fer.infsus.staem.controller.request.create.CreateCartRequest;
 import hr.fer.infsus.staem.mapper.core.GenericCreateMapper;
-import hr.fer.infsus.staem.security.CurrentSubject;
+import hr.fer.infsus.staem.security.CurrentUserInfo;
+import hr.fer.infsus.staem.security.UserInfo;
 import hr.fer.infsus.staem.service.CartSagaService;
 import hr.fer.infsus.staem.service.command.create.CreateCartCommand;
 import lombok.AllArgsConstructor;
@@ -28,8 +29,9 @@ public class CartController {
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
     @PreAuthorize("hasAuthority('create:cart')")
-    public void create(@CurrentSubject String subject, @RequestBody @Valid CreateCartRequest createCartRequest) {
-        cartSagaService.create(subject, genericCreateMapper.map(createCartRequest, CreateCartCommand.class));
+    public void create(@CurrentUserInfo UserInfo currentUserInfo,
+        @RequestBody @Valid CreateCartRequest createCartRequest) {
+        cartSagaService.create(currentUserInfo, genericCreateMapper.map(createCartRequest, CreateCartCommand.class));
     }
 
 }
